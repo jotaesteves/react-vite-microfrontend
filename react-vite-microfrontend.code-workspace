@@ -5,8 +5,8 @@
       "path": "."
     },
     {
-      "name": "🐚 Shell (Host)",
-      "path": "./packages/shell"
+      "name": "🐚 Host",
+      "path": "./packages/host"
     },
     {
       "name": "🎯 Header MF",
@@ -20,7 +20,7 @@
   "settings": {
     "typescript.preferences.includePackageJsonAutoImports": "auto",
     "typescript.suggest.autoImports": true,
-    "eslint.workingDirectories": ["packages/shell", "packages/mf-header", "packages/mf-footer"],
+    "eslint.workingDirectories": ["packages/host", "packages/mf-header", "packages/mf-footer"],
     "files.exclude": {
       "**/node_modules": true,
       "**/dist": true,

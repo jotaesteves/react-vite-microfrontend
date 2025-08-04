@@ -17,8 +17,8 @@ npm run dev
 ### Start individual apps
 
 ```bash
-# Shell app (localhost:3000)
-npm run dev:shell
+# host app (localhost:3000)
+npm run dev:host
 
 # Header MF (localhost:3001)
 npm run dev:mf1
@@ -30,7 +30,7 @@ npm run dev:mf2
 ## Development Workflow
 
 1. **Start all applications**: `npm run dev`
-2. **Open shell app**: <http://localhost:3000>
+2. **Open host app**: <http://localhost:3000>
 3. **Make changes** to any micro-frontend
 4. **See live updates** with HMR
 
@@ -38,7 +38,7 @@ npm run dev:mf2
 
 ### Module Federation Configuration
 
-#### Shell Application (Host)
+#### host Application (Host)
 
 - **Port**: 3000
 - **Role**: Container/Host application

@@ -45,9 +45,9 @@ if [ ! -d "node_modules" ]; then
     npm install
 fi
 
-if [ ! -d "packages/shell/node_modules" ]; then
-    echo "Installing shell dependencies..."
-    cd packages/shell && npm install && cd ../..
+if [ ! -d "packages/host/node_modules" ]; then
+    echo "Installing host dependencies..."
+    cd packages/host && npm install && cd ../..
 fi
 
 if [ ! -d "packages/mf-header/node_modules" ]; then
@@ -66,7 +66,7 @@ echo ""
 echo "🚀 Starting micro-frontend demonstration..."
 echo ""
 echo "This will start:"
-echo "  🐚 Shell application at http://localhost:3000"
+echo "  🐚 host application at http://localhost:3000"
 echo "  🎯 Header micro-frontend at http://localhost:3001"
 echo "  🦶 Footer micro-frontend at http://localhost:3002"
 echo ""

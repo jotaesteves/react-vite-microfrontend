@@ -30,8 +30,8 @@ echo "📦 Installing dependencies..."
 echo "Installing root dependencies..."
 npm install
 
-echo "Installing shell dependencies..."
-cd packages/shell && npm install
+echo "Installing host dependencies..."
+cd packages/host && npm install
 cd ../..
 
 echo "Installing header micro-frontend dependencies..."
@@ -49,12 +49,12 @@ echo ""
 echo "🎉 Setup complete! You can now run:"
 echo ""
 echo "  npm run dev          # Start all applications"
-echo "  npm run dev:shell    # Start shell app only"
+echo "  npm run dev:host    # Start host app only"
 echo "  npm run dev:mf1      # Start header MF only"
 echo "  npm run dev:mf2      # Start footer MF only"
 echo ""
 echo "🌐 URLs:"
-echo "  Shell App:  http://localhost:3000"
+echo "  host App:  http://localhost:3000"
 echo "  Header MF:  http://localhost:3001"
 echo "  Footer MF:  http://localhost:3002"
 echo ""

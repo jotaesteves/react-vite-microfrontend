@@ -4,15 +4,15 @@
 
 ### Local Development URLs
 
-- **Shell App**: http://localhost:3000
-- **Header MF**: http://localhost:3001/assets/remoteEntry.js
-- **Footer MF**: http://localhost:3002/assets/remoteEntry.js
+- **host App**: <http://localhost:3000>
+- **Header MF**: <http://localhost:3001/assets/remoteEntry.js>
+- **Footer MF**: <http://localhost:3002/assets/remoteEntry.js>
 
 ### Environment Variables
 
 Create `.env.local` files in each package for environment-specific configuration:
 
-#### packages/shell/.env.local
+#### packages/host/.env.local
 
 ```env
 VITE_HEADER_MF_URL=http://localhost:3001/assets/remoteEntry.js
@@ -39,7 +39,7 @@ VITE_APP_ENV=development
 ### Example Production URLs
 
 ```env
-# Production Shell
+# Production host
 VITE_HEADER_MF_URL=https://cdn.example.com/mf-header/assets/remoteEntry.js
 VITE_FOOTER_MF_URL=https://cdn.example.com/mf-footer/assets/remoteEntry.js
 VITE_APP_ENV=production
@@ -49,7 +49,7 @@ VITE_APP_ENV=production
 
 For production deployments, update the Vite configuration to use environment variables:
 
-#### packages/shell/vite.config.ts (Enhanced)
+#### packages/host/vite.config.ts (Enhanced)
 
 ```typescript
 import { defineConfig, loadEnv } from "vite";
@@ -63,7 +63,7 @@ export default defineConfig(({ mode }) => {
     plugins: [
       react(),
       federation({
-        name: "shell",
+        name: "host",
         remotes: {
           mfHeader: env.VITE_HEADER_MF_URL || "http://localhost:3001/assets/remoteEntry.js",
           mfFooter: env.VITE_FOOTER_MF_URL || "http://localhost:3002/assets/remoteEntry.js",
@@ -101,8 +101,8 @@ VITE_APP_ENV=staging
 ```yaml
 version: "3.8"
 services:
-  shell:
-    build: ./packages/shell
+  host:
+    build: ./packages/host
     ports:
       - "3000:3000"
     environment:
