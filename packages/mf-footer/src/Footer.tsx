@@ -1,15 +1,30 @@
 import React from "react";
 import "./Footer.css";
+import { useTheme, useNavigation } from "./store/microFrontendStore";
 
 const Footer: React.FC = () => {
+  const { theme, isDark } = useTheme();
+  const { currentPage, navigateTo } = useNavigation();
+
+  const handleFooterNavClick = (page: string, event: React.MouseEvent) => {
+    event.preventDefault();
+    navigateTo(page);
+  };
+
   return (
-    <footer className="footer">
+    <footer className={`footer ${theme}`}>
       <div className="footer-container">
         <div className="footer-section">
           <h3>Company</h3>
           <ul>
             <li>
-              <a href="#about">About Us</a>
+              <a 
+                href="#about" 
+                onClick={(e) => handleFooterNavClick("about", e)}
+                className={currentPage === "about" ? "active" : ""}
+              >
+                About Us
+              </a>
             </li>
             <li>
               <a href="#careers">Careers</a>
@@ -30,7 +45,13 @@ const Footer: React.FC = () => {
               <a href="#help">Help Center</a>
             </li>
             <li>
-              <a href="#contact">Contact Us</a>
+              <a 
+                href="#contact" 
+                onClick={(e) => handleFooterNavClick("contact", e)}
+                className={currentPage === "contact" ? "active" : ""}
+              >
+                Contact Us
+              </a>
             </li>
             <li>
               <a href="#status">Status</a>
@@ -75,12 +96,16 @@ const Footer: React.FC = () => {
               💬 Discord
             </a>
           </div>
+          <div className="theme-info">
+            <small>Theme: {isDark ? '🌙 Dark' : '☀️ Light'}</small>
+          </div>
         </div>
       </div>
 
       <div className="footer-bottom">
         <p>&copy; 2024 Micro Frontend Architecture. All rights reserved.</p>
-        <p>Built with React + Vite + Module Federation</p>
+        <p>Built with React + Vite + Module Federation + Zustand</p>
+        <small>Current page: {currentPage}</small>
       </div>
     </footer>
   );

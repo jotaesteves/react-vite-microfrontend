@@ -11,7 +11,7 @@ A complete micro-frontend architecture using **React + Vite** that mimics **Webp
    - Main container that orchestrates micro-frontends
    - Error boundaries for graceful failure handling
    - Lazy loading with suspense
-   - Location: `packages/shell/`
+   - Location: `packages/host/`
 
 2. **Header Micro-Frontend** - Port 3001
 
@@ -60,8 +60,8 @@ npm run dev
 ### 3. Individual Development
 
 ```bash
-# Start only shell application
-npm run dev:shell
+# Start only host application
+npm run dev:host
 
 # Start only header micro-frontend
 npm run dev:mf1
@@ -72,9 +72,9 @@ npm run dev:mf2
 
 ## 🌐 Application URLs
 
-- **Integrated App**: http://localhost:3000
-- **Header Standalone**: http://localhost:3001
-- **Footer Standalone**: http://localhost:3002
+- **Integrated App**: <http://localhost:3000>
+- **Header Standalone**: <http://localhost:3001>
+- **Footer Standalone**: <http://localhost:3002>
 
 ## ✅ Key Features Demonstrated
 
@@ -138,7 +138,7 @@ react-vite-microfrontend/
 ### Demo Checklist
 
 1. ✅ Start all applications with `npm run dev`
-2. ✅ Visit integrated app at http://localhost:3000
+2. ✅ Visit integrated app at <http://localhost:3000>
 3. ✅ Verify header and footer load from remote micro-frontends
 4. ✅ Visit standalone micro-frontends (ports 3001, 3002)
 5. ✅ Edit a component and see hot reload

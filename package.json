@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Micro-frontend architecture with React and Vite",
   "private": true,
-  "workspaces": [
-    "packages/*"
-  ],
   "scripts": {
     "hmr": "concurrently \"npm run dev:host\" \"npm run dev:mf1\" \"npm run dev:mf2\"",
     "dev": "npm run build:remotes && concurrently \"npm run dev:host\" \"npm run preview:remotes\"",

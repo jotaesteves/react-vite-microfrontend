@@ -6,7 +6,7 @@ A complete micro-frontend setup using React, Vite, and Module Federation that mi
 
 This project demonstrates a micro-frontend architecture with:
 
-- **Shell Application (Host)** - Main container that orchestrates micro-frontends
+- **Host Application** - Main container that orchestrates micro-frontends
 - **Header Micro-Frontend** - Navigation and branding component
 - **Footer Micro-Frontend** - Footer content and links component
 
@@ -15,7 +15,7 @@ This project demonstrates a micro-frontend architecture with:
 ```
 react-vite-microfrontend/
 ├── packages/
-│   ├── shell/              # Host application (port 3000)
+│   ├── host/               # Host application (port 3000)
 │   ├── mf-header/          # Header micro-frontend (port 3001)
 │   └── mf-footer/          # Footer micro-frontend (port 3002)
 ├── package.json            # Root package.json with workspace scripts
@@ -44,7 +44,7 @@ npm run dev
 
 This will start:
 
-- Shell app on <http://localhost:3000>
+- Host app on <http://localhost:3000>
 - Header MF on <http://localhost:3001>
 - Footer MF on <http://localhost:3002>
 
@@ -53,14 +53,44 @@ This will start:
 You can also run each micro-frontend independently:
 
 ```bash
-# Shell application
-npm run dev:shell
+# Host application
+npm run dev:host
 
 # Header micro-frontend
 npm run dev:mf1
 
 # Footer micro-frontend
 npm run dev:mf2
+```
+
+### 4. HMR Development Mode
+
+For faster development with Hot Module Replacement:
+
+```bash
+npm run hmr
+```
+
+This runs all applications in development mode simultaneously for the best DX.
+
+### 5. Preview Mode
+
+To test the production build locally:
+
+```bash
+# Build and preview all applications
+npm run build
+npm run preview:remotes
+```
+
+Or preview individual micro-frontends:
+
+```bash
+# Preview header micro-frontend
+npm run preview:mf1
+
+# Preview footer micro-frontend
+npm run preview:mf2
 ```
 
 ## 🏭 Production Build
@@ -70,7 +100,7 @@ npm run dev:mf2
 npm run build
 
 # Build individually
-npm run build:shell
+npm run build:host
 npm run build:mf1
 npm run build:mf2
 ```
@@ -110,9 +140,9 @@ npm run build:mf2
 
 ## 🏗️ How It Works
 
-### 1. Shell Application (Host)
+### 1. Host Application
 
-The shell application acts as the main container that:
+The host application acts as the main container that:
 
 - Loads and orchestrates micro-frontends
 - Provides error boundaries
@@ -130,11 +160,11 @@ Each micro-frontend:
 
 ### 3. Module Federation Configuration
 
-**Shell (Host) Configuration:**
+**Host Configuration:**
 
 ```typescript
 federation({
-  name: "shell",
+  name: "host",
   remotes: {
     mfHeader: "http://localhost:3001/assets/remoteEntry.js",
     mfFooter: "http://localhost:3002/assets/remoteEntry.js",
@@ -164,13 +194,13 @@ Each micro-frontend can be deployed separately:
 
 - Build and deploy header MF to CDN/server
 - Build and deploy footer MF to CDN/server
-- Update shell application with new remote URLs
-- Deploy shell application
+- Update host application with new remote URLs
+- Deploy host application
 
 ### 2. Versioning Strategy
 
 - Use semantic versioning for each micro-frontend
-- Update remote URLs in shell when needed
+- Update remote URLs in host when needed
 - Implement fallback mechanisms for version mismatches
 
 ## 🛠️ Customization
@@ -204,7 +234,7 @@ Each micro-frontend can be deployed separately:
    remotes: {
      mfHeader: 'http://localhost:3001/assets/remoteEntry.js',
      mfFooter: 'http://localhost:3002/assets/remoteEntry.js',
-     mfNewApp: 'http://localhost:3003/assets/remoteEntry.js', // New
+     mfNewApp: 'http://localhost:3003/assets/remoteEntry.js',
    }
    ```
 

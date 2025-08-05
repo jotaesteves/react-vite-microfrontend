@@ -1,19 +1,33 @@
 import React from "react";
 import "./Header.css";
+import { useNavigation, useTheme } from "./store/microFrontendStore";
 
 const Header: React.FC = () => {
+  const { currentPage, navigateTo, isCurrentPage } = useNavigation();
+  const { theme, setTheme, isDark } = useTheme();
+
+  const handleNavClick = (page: "home" | "about" | "services" | "contact", event: React.MouseEvent) => {
+    event.preventDefault();
+    navigateTo(page);
+  };
+
+  const toggleTheme = () => {
+    setTheme(isDark ? 'light' : 'dark');
+  };
+
   return (
-    <header className="bg-gradient-to-br from-neutral-800 to-red-700 text-white py-4 shadow-lg">
-      <div className="max-w-6xl mx-auto flex justify-between items-center px-8">
+    <header className={`header ${theme}`}>
+      <div className="header-container">
         <div className="logo">
-          <h2 className="text-2xl font-bold m-0">🚀 Micro Frontend</h2>
+          <h2>🚀 Micro Frontend</h2>
         </div>
         <nav className="navigation">
-          <ul className="flex list-none gap-8 m-0 p-0">
+          <ul>
             <li>
               <a
                 href="#home"
-                className="text-white no-underline font-medium hover:opacity-80 transition-opacity duration-300"
+                className={isCurrentPage("home") ? "active" : ""}
+                onClick={(e) => handleNavClick("home", e)}
               >
                 Home
               </a>
@@ -21,7 +35,8 @@ const Header: React.FC = () => {
             <li>
               <a
                 href="#about"
-                className="text-white no-underline font-medium hover:opacity-80 transition-opacity duration-300"
+                className={isCurrentPage("about") ? "active" : ""}
+                onClick={(e) => handleNavClick("about", e)}
               >
                 About
               </a>
@@ -29,7 +44,8 @@ const Header: React.FC = () => {
             <li>
               <a
                 href="#services"
-                className="text-white no-underline font-medium hover:opacity-80 transition-opacity duration-300"
+                className={isCurrentPage("services") ? "active" : ""}
+                onClick={(e) => handleNavClick("services", e)}
               >
                 Services
               </a>
@@ -37,20 +53,24 @@ const Header: React.FC = () => {
             <li>
               <a
                 href="#contact"
-                className="text-white no-underline font-medium hover:opacity-80 transition-opacity duration-300"
+                className={isCurrentPage("contact") ? "active" : ""}
+                onClick={(e) => handleNavClick("contact", e)}
               >
                 Contact
               </a>
             </li>
           </ul>
         </nav>
-        <div className="flex gap-4">
-          <button className="px-4 py-2 bg-transparent text-white border-2 border-white rounded font-medium cursor-pointer transition-all duration-300 hover:bg-white hover:text-neutral-800">
-            Login
+        <div className="header-actions">
+          <button 
+            className="btn-theme" 
+            onClick={toggleTheme}
+            title={`Switch to ${isDark ? 'light' : 'dark'} theme`}
+          >
+            {isDark ? '☀️' : '🌙'}
           </button>
-          <button className="px-4 py-2 bg-neutral-800 text-white border-none rounded font-medium cursor-pointer transition-all duration-300 hover:bg-neutral-200 hover:-translate-y-0.5 hover:text-black">
-            Sign Up
-          </button>
+          <button className="btn-login">Login</button>
+          <button className="btn-signup">Sign Up</button>
         </div>
       </div>
     </header>

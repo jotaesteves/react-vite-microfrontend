@@ -73,6 +73,7 @@ npm run dev:mf2
 3. **Error Boundaries**: Graceful failure handling for micro-frontends
 4. **Hot Module Replacement**: Fast development with live reloading
 5. **TypeScript Support**: Full type safety across applications
+6. **Inter-MF Communication**: Event-based communication between micro-frontends for navigation and state sharing
 
 ## Testing the Setup
 
@@ -81,6 +82,45 @@ npm run dev:mf2
 3. Visit <http://localhost:3001> to see the Header component standalone
 4. Visit <http://localhost:3002> to see the Footer component standalone
 5. Try stopping one micro-frontend to see error boundary in action
+6. **Test Navigation**: Click on navigation items (Home, About, Services, Contact) in the header to see dynamic content changes in the host application
+
+## Navigation Feature
+
+The application includes a dynamic navigation feature that demonstrates inter-micro-frontend communication:
+
+### How it Works
+
+1. **Header MF Navigation**: The header micro-frontend contains navigation links (Home, About, Services, Contact)
+2. **Event Communication**: When a navigation item is clicked, the header emits a navigation event using a shared event bus
+3. **Host Content Update**: The host application listens for these events and updates the main content area accordingly
+4. **Active State**: The header maintains visual feedback showing which page is currently active
+
+### Event System
+
+The communication uses a simple event bus pattern:
+
+```typescript
+// Event structure
+interface NavigationEvent {
+  type: "NAVIGATION_CHANGE";
+  payload: {
+    page: "home" | "about" | "services" | "contact";
+  };
+}
+
+// Usage in header MF
+eventBus.emit({
+  type: "NAVIGATION_CHANGE",
+  payload: { page: "about" },
+});
+
+// Usage in host application
+eventBus.on("NAVIGATION_CHANGE", (event) => {
+  setCurrentPage(event.payload.page);
+});
+```
+
+This demonstrates how micro-frontends can communicate without tight coupling, maintaining independence while enabling coordinated behavior.
 
 ## Troubleshooting
 
