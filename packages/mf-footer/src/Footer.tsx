@@ -18,8 +18,8 @@ const Footer: React.FC = () => {
           <h3>Company</h3>
           <ul>
             <li>
-              <a 
-                href="#about" 
+              <a
+                href="#about"
                 onClick={(e) => handleFooterNavClick("about", e)}
                 className={currentPage === "about" ? "active" : ""}
               >
@@ -45,8 +45,8 @@ const Footer: React.FC = () => {
               <a href="#help">Help Center</a>
             </li>
             <li>
-              <a 
-                href="#contact" 
+              <a
+                href="#contact"
                 onClick={(e) => handleFooterNavClick("contact", e)}
                 className={currentPage === "contact" ? "active" : ""}
               >
@@ -97,7 +97,7 @@ const Footer: React.FC = () => {
             </a>
           </div>
           <div className="theme-info">
-            <small>Theme: {isDark ? '🌙 Dark' : '☀️ Light'}</small>
+            <small>Theme: {isDark ? "🌙 Dark" : "☀️ Light"}</small>
           </div>
         </div>
       </div>

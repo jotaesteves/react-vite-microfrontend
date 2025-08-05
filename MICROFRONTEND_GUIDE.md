@@ -5,11 +5,13 @@ This project demonstrates a microfrontend architecture using React, Vite, Module
 ## 🏗️ Architecture Overview
 
 ### Global State Management with Zustand
+
 - **Host Application**: Uses Zustand for global state management
 - **Microfrontends**: Can access the global store when running inside the host, fallback to local state when standalone
 - **Shared Context**: Navigation, theme, user state, and custom data shared across all microfrontends
 
 ### Router Integration
+
 - **React Router**: Setup for future routing enhancements
 - **Navigation System**: Centralized navigation that works across microfrontends
 - **History Management**: Browser history integration
@@ -17,18 +19,21 @@ This project demonstrates a microfrontend architecture using React, Vite, Module
 ## 📦 Packages
 
 ### Host Application (`packages/host`)
+
 - Main shell application
 - Contains the global Zustand store
 - Manages routing and shared state
 - Loads header and footer microfrontends
 
 ### Header Microfrontend (`packages/mf-header`)
+
 - Navigation component
 - Theme toggle functionality
 - User authentication buttons
 - Responsive to global state changes
 
 ### Footer Microfrontend (`packages/mf-footer`)
+
 - Footer links and information
 - Displays current page and theme
 - Navigation integration
@@ -36,10 +41,12 @@ This project demonstrates a microfrontend architecture using React, Vite, Module
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or yarn
 
 ### Installation
+
 ```bash
 # Install all dependencies
 npm run install:all
@@ -52,6 +59,7 @@ cd ../mf-footer && npm install
 ```
 
 ### Development
+
 ```bash
 # Start all microfrontends in development mode
 npm run hmr
@@ -63,6 +71,7 @@ npm run dev:mf2     # Footer MF on http://localhost:3002
 ```
 
 ### Production Build
+
 ```bash
 # Build all applications
 npm run build
@@ -76,18 +85,19 @@ npm run build:mf2
 ## 🎯 Key Features
 
 ### 1. Global State Management
+
 ```typescript
 // Using the global store in any microfrontend
-import { useMicroFrontendNavigation, useMicroFrontendTheme } from './hooks/useMicroFrontend';
+import { useMicroFrontendNavigation, useMicroFrontendTheme } from "./hooks/useMicroFrontend";
 
 function MyComponent() {
   const { currentPage, navigate } = useMicroFrontendNavigation();
   const { theme, toggleTheme } = useMicroFrontendTheme();
-  
+
   return (
     <div className={theme}>
       <p>Current page: {currentPage}</p>
-      <button onClick={() => navigate('about')}>Go to About</button>
+      <button onClick={() => navigate("about")}>Go to About</button>
       <button onClick={toggleTheme}>Toggle Theme</button>
     </div>
   );
@@ -95,40 +105,42 @@ function MyComponent() {
 ```
 
 ### 2. Cross-Microfrontend Communication
+
 ```typescript
 // Send data between microfrontends
-import { useMicroFrontendSharedData } from './hooks/useMicroFrontend';
+import { useMicroFrontendSharedData } from "./hooks/useMicroFrontend";
 
 function HeaderComponent() {
   const { setData, getData } = useMicroFrontendSharedData();
-  
+
   const shareUserData = () => {
-    setData('userPreferences', { language: 'en', notifications: true });
+    setData("userPreferences", { language: "en", notifications: true });
   };
-  
+
   const getUserData = () => {
-    const prefs = getData('userPreferences');
-    console.log('User preferences:', prefs);
+    const prefs = getData("userPreferences");
+    console.log("User preferences:", prefs);
   };
 }
 ```
 
 ### 3. Navigation System
+
 ```typescript
 // Navigate from any microfrontend
-import { useNavigation } from './store/microFrontendStore';
+import { useNavigation } from "./store/microFrontendStore";
 
 function NavigationComponent() {
   const { currentPage, navigateTo, isCurrentPage } = useNavigation();
-  
+
   return (
     <nav>
-      <a 
-        href="#home" 
-        className={isCurrentPage('home') ? 'active' : ''}
+      <a
+        href="#home"
+        className={isCurrentPage("home") ? "active" : ""}
         onClick={(e) => {
           e.preventDefault();
-          navigateTo('home');
+          navigateTo("home");
         }}
       >
         Home
@@ -139,28 +151,26 @@ function NavigationComponent() {
 ```
 
 ### 4. Theme Management
+
 ```typescript
 // Theme switching across all microfrontends
-import { useTheme } from './store/microFrontendStore';
+import { useTheme } from "./store/microFrontendStore";
 
 function ThemeToggle() {
   const { theme, setTheme, isDark } = useTheme();
-  
+
   const toggleTheme = () => {
-    setTheme(isDark ? 'light' : 'dark');
+    setTheme(isDark ? "light" : "dark");
   };
-  
-  return (
-    <button onClick={toggleTheme}>
-      {isDark ? '☀️ Light Mode' : '🌙 Dark Mode'}
-    </button>
-  );
+
+  return <button onClick={toggleTheme}>{isDark ? "☀️ Light Mode" : "🌙 Dark Mode"}</button>;
 }
 ```
 
 ## 🔧 Configuration
 
 ### Module Federation Configuration
+
 Each microfrontend is configured with Module Federation to expose components:
 
 ```typescript
@@ -169,18 +179,19 @@ export default defineConfig({
   plugins: [
     react(),
     federation({
-      name: 'mfHeader',
-      filename: 'remoteEntry.js',
+      name: "mfHeader",
+      filename: "remoteEntry.js",
       exposes: {
-        './Header': './src/Header.tsx',
+        "./Header": "./src/Header.tsx",
       },
-      shared: ['react', 'react-dom']
-    })
-  ]
+      shared: ["react", "react-dom"],
+    }),
+  ],
 });
 ```
 
 ### Global Store Setup
+
 The host application makes the store globally available:
 
 ```typescript
@@ -191,12 +202,13 @@ declare global {
   }
 }
 
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   window.globalMicroFrontendStore = useGlobalStore;
 }
 ```
 
 ## 📁 Project Structure
+
 ```
 react-vite-microfrontend/
 ├── packages/
@@ -238,27 +250,33 @@ react-vite-microfrontend/
 ```
 
 ## 🎨 Styling and Theming
+
 - Each microfrontend can respond to theme changes
 - CSS classes are applied based on the current theme
 - Consistent styling across all microfrontends
 
 ## 🧪 Testing
+
 Each microfrontend can be developed and tested independently:
+
 - **Standalone mode**: Run individual microfrontends for development
 - **Integrated mode**: Test the full application with all microfrontends
 
 ## 🔗 Communication Methods
 
 ### 1. Global Store (Recommended)
+
 - Type-safe state sharing
 - Reactive updates across microfrontends
 - Centralized state management
 
 ### 2. Event Bus (Legacy/Fallback)
+
 - Custom event system for backward compatibility
 - Useful for simple notifications
 
 ### 3. Shared Data API
+
 - Key-value store for temporary data sharing
 - Perfect for user preferences, cache, etc.
 

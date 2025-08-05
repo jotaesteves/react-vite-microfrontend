@@ -3,7 +3,7 @@ import "./Header.css";
 import { useNavigation, useTheme } from "./store/microFrontendStore";
 
 const Header: React.FC = () => {
-  const { currentPage, navigateTo, isCurrentPage } = useNavigation();
+  const { navigateTo, isCurrentPage } = useNavigation();
   const { theme, setTheme, isDark } = useTheme();
 
   const handleNavClick = (page: "home" | "about" | "services" | "contact", event: React.MouseEvent) => {
@@ -12,7 +12,7 @@ const Header: React.FC = () => {
   };
 
   const toggleTheme = () => {
-    setTheme(isDark ? 'light' : 'dark');
+    setTheme(isDark ? "light" : "dark");
   };
 
   return (
@@ -62,12 +62,8 @@ const Header: React.FC = () => {
           </ul>
         </nav>
         <div className="header-actions">
-          <button 
-            className="btn-theme" 
-            onClick={toggleTheme}
-            title={`Switch to ${isDark ? 'light' : 'dark'} theme`}
-          >
-            {isDark ? '☀️' : '🌙'}
+          <button className="btn-theme" onClick={toggleTheme} title={`Switch to ${isDark ? "light" : "dark"} theme`}>
+            {isDark ? "☀️" : "🌙"}
           </button>
           <button className="btn-login">Login</button>
           <button className="btn-signup">Sign Up</button>

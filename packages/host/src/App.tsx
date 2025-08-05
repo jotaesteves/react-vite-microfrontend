@@ -24,7 +24,7 @@ const AppLayout: React.FC = () => {
   }, [theme]);
 
   return (
-    <div className={`flex flex-col min-h-screen w-full ${theme === 'dark' ? 'bg-gray-100' : 'bg-gray-50'}`}>
+    <div className={`flex flex-col min-h-screen w-full ${theme === "dark" ? "bg-gray-100" : "bg-gray-50"}`}>
       <ErrorBoundary>
         <Suspense fallback={<div className="p-4 text-center">Loading Header...</div>}>
           <Header />
@@ -50,7 +50,7 @@ function App() {
       {/* For now, we'll use the existing layout structure */}
       {/* The router can be integrated gradually */}
       <AppLayout />
-      
+
       {/* Future enhancement: Full router integration */}
       {/* <RouterProvider router={router} /> */}
     </div>

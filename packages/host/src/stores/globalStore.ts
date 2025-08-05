@@ -1,26 +1,26 @@
-import { create } from 'zustand';
-import { subscribeWithSelector } from 'zustand/middleware';
+import { create } from "zustand";
+import { subscribeWithSelector } from "zustand/middleware";
 
 // Define the global state interface
 export interface GlobalState {
   // Navigation state
   currentPage: string;
   navigationHistory: string[];
-  
+
   // User state
   user: {
     name?: string;
     email?: string;
     isAuthenticated: boolean;
   };
-  
+
   // App-wide settings
-  theme: 'light' | 'dark';
-  language: 'en' | 'es' | 'fr';
-  
+  theme: "light" | "dark";
+  language: "en" | "es" | "fr";
+
   // Shared data between microfrontends
   sharedData: Record<string, any>;
-  
+
   // Loading states
   isLoading: boolean;
   loadingMessage?: string;
@@ -32,37 +32,37 @@ export interface GlobalActions {
   setCurrentPage: (page: string) => void;
   navigateTo: (page: string) => void;
   goBack: () => void;
-  
+
   // User actions
-  setUser: (user: Partial<GlobalState['user']>) => void;
+  setUser: (user: Partial<GlobalState["user"]>) => void;
   login: (name: string, email: string) => void;
   logout: () => void;
-  
+
   // App settings actions
-  setTheme: (theme: GlobalState['theme']) => void;
-  setLanguage: (language: GlobalState['language']) => void;
-  
+  setTheme: (theme: GlobalState["theme"]) => void;
+  setLanguage: (language: GlobalState["language"]) => void;
+
   // Shared data actions
   setSharedData: (key: string, value: any) => void;
   getSharedData: (key: string) => any;
   clearSharedData: (key?: string) => void;
-  
+
   // Loading actions
   setLoading: (isLoading: boolean, message?: string) => void;
-  
+
   // Reset store
   reset: () => void;
 }
 
 // Initial state
 const initialState: GlobalState = {
-  currentPage: 'home',
+  currentPage: "home",
   navigationHistory: [],
   user: {
     isAuthenticated: false,
   },
-  theme: 'dark',
-  language: 'en',
+  theme: "dark",
+  language: "en",
   sharedData: {},
   isLoading: false,
 };
@@ -71,7 +71,7 @@ const initialState: GlobalState = {
 export const useGlobalStore = create<GlobalState & GlobalActions>()(
   subscribeWithSelector((set, get) => ({
     ...initialState,
-    
+
     // Navigation actions
     setCurrentPage: (page: string) => {
       set((state) => ({
@@ -79,41 +79,41 @@ export const useGlobalStore = create<GlobalState & GlobalActions>()(
         navigationHistory: [...state.navigationHistory, page],
       }));
     },
-    
+
     navigateTo: (page: string) => {
       const { setCurrentPage } = get();
       setCurrentPage(page);
-      
+
       // Emit navigation event for backward compatibility
-      if (typeof window !== 'undefined' && window.microFrontendEventBus) {
+      if (typeof window !== "undefined" && window.microFrontendEventBus) {
         window.microFrontendEventBus.emit({
-          type: 'NAVIGATION_CHANGE',
+          type: "NAVIGATION_CHANGE",
           payload: { page: page as any },
         });
       }
     },
-    
+
     goBack: () => {
       const { navigationHistory } = get();
       if (navigationHistory.length > 1) {
         const newHistory = [...navigationHistory];
         newHistory.pop(); // Remove current page
-        const previousPage = newHistory[newHistory.length - 1] || 'home';
-        
+        const previousPage = newHistory[newHistory.length - 1] || "home";
+
         set({
           currentPage: previousPage,
           navigationHistory: newHistory,
         });
       }
     },
-    
+
     // User actions
     setUser: (userData) => {
       set((state) => ({
         user: { ...state.user, ...userData },
       }));
     },
-    
+
     login: (name: string, email: string) => {
       set({
         user: {
@@ -123,7 +123,7 @@ export const useGlobalStore = create<GlobalState & GlobalActions>()(
         },
       });
     },
-    
+
     logout: () => {
       set({
         user: {
@@ -131,21 +131,21 @@ export const useGlobalStore = create<GlobalState & GlobalActions>()(
         },
       });
     },
-    
+
     // App settings actions
     setTheme: (theme) => {
       set({ theme });
-      
+
       // Apply theme to document
-      if (typeof document !== 'undefined') {
+      if (typeof document !== "undefined") {
         document.documentElement.className = theme;
       }
     },
-    
+
     setLanguage: (language) => {
       set({ language });
     },
-    
+
     // Shared data actions
     setSharedData: (key: string, value: any) => {
       set((state) => ({
@@ -155,11 +155,11 @@ export const useGlobalStore = create<GlobalState & GlobalActions>()(
         },
       }));
     },
-    
+
     getSharedData: (key: string) => {
       return get().sharedData[key];
     },
-    
+
     clearSharedData: (key?: string) => {
       if (key) {
         set((state) => {
@@ -171,12 +171,12 @@ export const useGlobalStore = create<GlobalState & GlobalActions>()(
         set({ sharedData: {} });
       }
     },
-    
+
     // Loading actions
     setLoading: (isLoading: boolean, message?: string) => {
       set({ isLoading, loadingMessage: message });
     },
-    
+
     // Reset store
     reset: () => {
       set(initialState);
@@ -192,7 +192,7 @@ declare global {
 }
 
 // Make the store globally available
-if (typeof window !== 'undefined') {
+if (typeof window !== "undefined") {
   window.globalMicroFrontendStore = useGlobalStore;
 }
 
@@ -200,9 +200,9 @@ if (typeof window !== 'undefined') {
 useGlobalStore.subscribe(
   (state) => state.currentPage,
   (currentPage) => {
-    if (typeof window !== 'undefined' && window.microFrontendEventBus) {
+    if (typeof window !== "undefined" && window.microFrontendEventBus) {
       window.microFrontendEventBus.emit({
-        type: 'NAVIGATION_CHANGE',
+        type: "NAVIGATION_CHANGE",
         payload: { page: currentPage as any },
       });
     }
