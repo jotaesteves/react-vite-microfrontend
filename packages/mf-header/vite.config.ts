@@ -19,18 +19,22 @@ export default defineConfig({
       },
     }),
   ],
+  base: "/",
   build: {
     modulePreload: false,
     target: "esnext",
     minify: false,
     cssCodeSplit: false,
+    assetsDir: "assets",
   },
   preview: {
     port: 3001,
     cors: true,
+    host: true,
   },
   server: {
     port: 3001,
     cors: true,
+    host: true,
   },
 });

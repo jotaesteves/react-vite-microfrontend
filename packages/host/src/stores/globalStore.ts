@@ -56,7 +56,7 @@ export interface GlobalActions {
 
 // Initial state
 const initialState: GlobalState = {
-  currentPage: "home",
+  currentPage: "360vision", // Start with the first tab
   navigationHistory: [],
   user: {
     isAuthenticated: false,
@@ -83,6 +83,14 @@ export const useGlobalStore = create<GlobalState & GlobalActions>()(
     navigateTo: (page: string) => {
       const { setCurrentPage } = get();
       setCurrentPage(page);
+
+      // Use React Router navigation when available
+      if (typeof window !== "undefined" && window.microFrontendNavigation) {
+        const route = window.microFrontendNavigation.getRouteFromTab
+          ? window.microFrontendNavigation.getRouteFromTab(page)
+          : `/${page}`;
+        window.microFrontendNavigation.navigateTo(route);
+      }
 
       // Emit navigation event for backward compatibility
       if (typeof window !== "undefined" && window.microFrontendEventBus) {

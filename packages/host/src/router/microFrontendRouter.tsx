@@ -1,7 +1,19 @@
-import { createBrowserRouter, createMemoryRouter } from "react-router-dom";
-import React, { Suspense } from "react";
-import MainContent from "../components/MainContent";
+import { createBrowserRouter, createMemoryRouter, Outlet, useNavigate, useLocation } from "react-router-dom";
+import React, { Suspense, lazy } from "react";
 import ErrorBoundary from "../components/ErrorBoundary";
+import { useMicroFrontendTheme } from "../hooks/useMicroFrontend";
+
+// Lazy load micro-frontends
+const Header = lazy(() => import("mfHeader/Header"));
+const Footer = lazy(() => import("mfFooter/Footer"));
+
+// Import screen components
+import Visao360 from "../screens/Visao360";
+import DadosPessoais from "../screens/DadosPessoais";
+import PatrimonioEProdutos from "../screens/PatrimonioEProdutos";
+import CanaisEServicos from "../screens/CanaisEServicos";
+import HistoricoInteracoes from "../screens/HistoricoInteracoes";
+import MainContent from "../components/MainContent";
 
 // Define route types
 export interface MicroFrontendRoute {
@@ -12,14 +24,134 @@ export interface MicroFrontendRoute {
   meta?: Record<string, any>;
 }
 
-// Default routes for the host application
+// Component to sync React Router with global store
+const RouterSync: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  // Import useGlobalStore dynamically to avoid circular dependencies
+  const [useGlobalStore, setUseGlobalStore] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    import("../stores/globalStore").then(({ useGlobalStore: store }) => {
+      setUseGlobalStore(() => store);
+    });
+  }, []);
+
+  // Update global store when route changes
+  React.useEffect(() => {
+    if (!useGlobalStore) return;
+
+    const tab = navigationHelpers.getTabFromRoute(location.pathname);
+    const currentPage = useGlobalStore.getState().currentPage;
+
+    if (tab !== currentPage) {
+      useGlobalStore.getState().setCurrentPage(tab);
+    }
+  }, [location.pathname, useGlobalStore]);
+
+  // Update navigation helpers with router's navigate function
+  React.useEffect(() => {
+    navigationHelpers.navigateTo = (path: string) => {
+      navigate(path);
+    };
+    navigationHelpers.replaceTo = (path: string) => {
+      navigate(path, { replace: true });
+    };
+  }, [navigate]);
+
+  // Subscribe to global store changes and update route accordingly
+  React.useEffect(() => {
+    if (!useGlobalStore) return;
+
+    const unsubscribe = useGlobalStore.subscribe(
+      (state: any) => state.currentPage,
+      (newPage: string) => {
+        const newRoute = navigationHelpers.getRouteFromTab(newPage);
+        if (location.pathname !== newRoute) {
+          navigate(newRoute, { replace: true });
+        }
+      }
+    );
+
+    return unsubscribe;
+  }, [navigate, location.pathname, useGlobalStore]);
+
+  return null;
+};
+
+// Layout component that wraps all routes
+const RootLayout: React.FC = () => {
+  const { theme } = useMicroFrontendTheme();
+
+  // Apply theme to document
+  React.useEffect(() => {
+    document.documentElement.className = theme;
+  }, [theme]);
+
+  return (
+    <div className={`flex flex-col min-h-screen w-full ${theme === "dark" ? "bg-gray-100" : "bg-gray-50"}`}>
+      <RouterSync />
+
+      <ErrorBoundary>
+        <Suspense fallback={<div className="p-4 text-center">Loading Header...</div>}>
+          <Header />
+        </Suspense>
+      </ErrorBoundary>
+
+      <main className="flex-1 p-8 bg-white text-gray-800">
+        <Outlet />
+      </main>
+
+      <ErrorBoundary>
+        <Suspense fallback={<div className="p-4 text-center">Loading Footer...</div>}>
+          <Footer />
+        </Suspense>
+      </ErrorBoundary>
+    </div>
+  );
+};
+
+// Default routes for the host application - including both legacy and new routes
 const defaultRoutes: MicroFrontendRoute[] = [
+  // Tab-based routes (primary navigation)
   {
     path: "/",
-    component: () => <MainContent currentPage="home" />,
-    title: "Home",
-    description: "Welcome to our microfrontend application",
+    component: Visao360,
+    title: "Visão 360",
+    description: "Visão completa do cliente",
   },
+  {
+    path: "/360vision",
+    component: Visao360,
+    title: "Visão 360",
+    description: "Visão completa do cliente",
+  },
+  {
+    path: "/personal-data",
+    component: DadosPessoais,
+    title: "Dados Pessoais",
+    description: "Informações pessoais do cliente",
+  },
+  {
+    path: "/assets-products",
+    component: PatrimonioEProdutos,
+    title: "Patrimônio e Produtos",
+    description: "Produtos e patrimônio do cliente",
+  },
+  {
+    path: "/channels-services",
+    component: CanaisEServicos,
+    title: "Canais e Serviços",
+    description: "Canais de atendimento e serviços",
+  },
+  {
+    path: "/history-interactions",
+    component: HistoricoInteracoes,
+    title: "Histórico de Interações",
+    description: "Histórico de interações com o cliente",
+  },
+  // Legacy routes for backward compatibility
   {
     path: "/home",
     component: () => <MainContent currentPage="home" />,
@@ -81,41 +213,39 @@ const RouteWrapper: React.FC<{
 
 // Create router configuration
 export const createMicroFrontendRouter = (routes: MicroFrontendRoute[] = defaultRoutes, isMemoryRouter = false) => {
-  const routerConfig = routes.map((route) => ({
-    path: route.path,
-    element: <RouteWrapper component={route.component} title={route.title} meta={route.meta} />,
-  }));
-
-  // Add a catch-all route for 404
-  routerConfig.push({
-    path: "*",
-    element: (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
-          <p className="text-xl text-gray-600 mb-8">Page not found</p>
-          <button
-            onClick={() => window.history.pushState({}, "", "/")}
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Go Home
-          </button>
+  const routerConfig = [
+    {
+      path: "/",
+      element: <RootLayout />,
+      children: routes.map((route) => ({
+        path: route.path === "/" ? "" : route.path, // Empty path for index route
+        element: <RouteWrapper component={route.component} title={route.title} meta={route.meta} />,
+      })),
+      errorElement: (
+        <div className="flex items-center justify-center min-h-screen bg-gray-100">
+          <div className="text-center">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">404</h1>
+            <p className="text-xl text-gray-600 mb-8">Page not found</p>
+            <button
+              onClick={() => (window.location.href = "/")}
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            >
+              Go Home
+            </button>
+          </div>
         </div>
-      </div>
-    ),
-  });
+      ),
+    },
+  ];
 
   return isMemoryRouter ? createMemoryRouter(routerConfig) : createBrowserRouter(routerConfig);
 };
 
-// Navigation helper functions
+// Navigation helper functions (updated to work with React Router)
 export const navigationHelpers = {
-  // Navigate to a specific route
-  navigateTo: (path: string) => {
-    if (typeof window !== "undefined") {
-      window.history.pushState({}, "", path);
-      window.dispatchEvent(new PopStateEvent("popstate"));
-    }
+  // Navigate to a specific route - will be updated by RouterSync component with router navigation
+  navigateTo: (_path: string) => {
+    console.warn("Navigation helper not initialized. Use React Router's navigate function instead.");
   },
 
   // Go back in history
@@ -132,12 +262,9 @@ export const navigationHelpers = {
     }
   },
 
-  // Replace current route
-  replaceTo: (path: string) => {
-    if (typeof window !== "undefined") {
-      window.history.replaceState({}, "", path);
-      window.dispatchEvent(new PopStateEvent("popstate"));
-    }
+  // Replace current route - will be updated by RouterSync component with router navigation
+  replaceTo: (_path: string) => {
+    console.warn("Navigation helper not initialized. Use React Router's navigate function instead.");
   },
 
   // Get current pathname
@@ -148,19 +275,51 @@ export const navigationHelpers = {
   // Check if a route is active
   isActiveRoute: (path: string) => {
     const currentPath = navigationHelpers.getCurrentPath();
-    return currentPath === path || (path === "/" && currentPath === "/home");
+    return currentPath === path || (path === "/" && currentPath === "/360vision");
+  },
+
+  // Map tab names to routes for backward compatibility
+  getRouteFromTab: (tab: string) => {
+    const tabToRoute: Record<string, string> = {
+      "360vision": "/360vision",
+      personalData: "/personal-data",
+      assetsProducts: "/assets-products",
+      channelsAndServices: "/channels-services",
+      historyInteractions: "/history-interactions",
+    };
+    return tabToRoute[tab] || "/360vision";
+  },
+
+  // Map routes to tab names for backward compatibility
+  getTabFromRoute: (route: string) => {
+    const routeToTab: Record<string, string> = {
+      "/": "360vision",
+      "/360vision": "360vision",
+      "/personal-data": "personalData",
+      "/assets-products": "assetsProducts",
+      "/channels-services": "channelsAndServices",
+      "/history-interactions": "historyInteractions",
+    };
+    return routeToTab[route] || "360vision";
   },
 };
 
 // Make navigation helpers globally available for microfrontends
 declare global {
   interface Window {
-    microFrontendNavigation: typeof navigationHelpers;
+    microFrontendNavigation: typeof navigationHelpers & {
+      getRouteFromTab?: (tab: string) => string;
+      getTabFromRoute?: (route: string) => string;
+    };
   }
 }
 
 if (typeof window !== "undefined") {
-  window.microFrontendNavigation = navigationHelpers;
+  window.microFrontendNavigation = {
+    ...navigationHelpers,
+    getRouteFromTab: navigationHelpers.getRouteFromTab,
+    getTabFromRoute: navigationHelpers.getTabFromRoute,
+  };
 }
 
 export default createMicroFrontendRouter;

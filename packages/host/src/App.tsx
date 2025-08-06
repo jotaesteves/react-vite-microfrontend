@@ -1,60 +1,56 @@
-import React, { Suspense, lazy, useEffect } from "react";
-import { RouterProvider } from "react-router-dom";
+import React, { useEffect } from "react";
+import { RouterProvider, useNavigate, useLocation } from "react-router-dom";
 import "./App.css";
-import { useMicroFrontendNavigation, useMicroFrontendTheme } from "./hooks/useMicroFrontend";
-import createMicroFrontendRouter from "./router/microFrontendRouter";
-import ErrorBoundary from "./components/ErrorBoundary";
-import MainContent from "./components/MainContent";
-
-// Lazy load micro-frontends
-const Header = lazy(() => import("mfHeader/Header"));
-const Footer = lazy(() => import("mfFooter/Footer"));
+import createMicroFrontendRouter, { navigationHelpers } from "./router/microFrontendRouter";
+import { useGlobalStore } from "./stores/globalStore";
 
 // Create router instance
 const router = createMicroFrontendRouter();
 
-// Main layout component that wraps the router
-const AppLayout: React.FC = () => {
-  const { currentPage } = useMicroFrontendNavigation();
-  const { theme } = useMicroFrontendTheme();
+// Component to sync React Router with global store
+const RouterSync: React.FC = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { setCurrentPage, currentPage } = useGlobalStore();
 
-  // Apply theme to document
+  // Update global store when route changes
   useEffect(() => {
-    document.documentElement.className = theme;
-  }, [theme]);
+    const tab = navigationHelpers.getTabFromRoute(location.pathname);
+    if (tab !== currentPage) {
+      setCurrentPage(tab);
+    }
+  }, [location.pathname, setCurrentPage, currentPage]);
 
-  return (
-    <div className={`flex flex-col min-h-screen w-full ${theme === "dark" ? "bg-gray-100" : "bg-gray-50"}`}>
-      <ErrorBoundary>
-        <Suspense fallback={<div className="p-4 text-center">Loading Header...</div>}>
-          <Header />
-        </Suspense>
-      </ErrorBoundary>
+  // Update navigation helpers with router's navigate function
+  useEffect(() => {
+    navigationHelpers.navigateTo = (path: string) => {
+      navigate(path);
+    };
+    navigationHelpers.replaceTo = (path: string) => {
+      navigate(path, { replace: true });
+    };
+  }, [navigate]);
 
-      <main className="flex-1 p-8 bg-neutral-800 text-gray-800">
-        <MainContent currentPage={currentPage as "home" | "about" | "services" | "contact"} />
-      </main>
+  // Subscribe to global store changes and update route accordingly
+  useEffect(() => {
+    const unsubscribe = useGlobalStore.subscribe(
+      (state) => state.currentPage,
+      (newPage) => {
+        const newRoute = navigationHelpers.getRouteFromTab(newPage);
+        if (location.pathname !== newRoute) {
+          navigate(newRoute, { replace: true });
+        }
+      }
+    );
 
-      <ErrorBoundary>
-        <Suspense fallback={<div className="p-4 text-center">Loading Footer...</div>}>
-          <Footer />
-        </Suspense>
-      </ErrorBoundary>
-    </div>
-  );
+    return unsubscribe;
+  }, [navigate, location.pathname]);
+
+  return null;
 };
 
 function App() {
-  return (
-    <div>
-      {/* For now, we'll use the existing layout structure */}
-      {/* The router can be integrated gradually */}
-      <AppLayout />
-
-      {/* Future enhancement: Full router integration */}
-      {/* <RouterProvider router={router} /> */}
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;

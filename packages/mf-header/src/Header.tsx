@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import "./Header.css";
 import { useNavigation, useTheme } from "./store/microFrontendStore";
-import logo from "./assets/logo.jpg";
+import logoUrl from "./assets/logo.jpg";
+import HeaderTabs from "./components/HeaderTabs";
 
 export type User = {
   firstName: string;
@@ -72,7 +73,7 @@ const Header: React.FC = () => {
           {/* Logo and name section */}
           <div className="flex items-center">
             <img
-              src={logo}
+              src={logoUrl}
               alt="Logo"
               className="h-10 w-auto inline-block mr-2"
               onError={(e) => {
@@ -181,6 +182,7 @@ const Header: React.FC = () => {
           </div>
         </div>
       </div>
+      <HeaderTabs />
     </header>
   );
 };
