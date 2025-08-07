@@ -1,32 +1,61 @@
 import React, { useState } from "react";
 
+// Declare global navigation helper interface
+declare global {
+  interface Window {
+    microFrontendNavigation?: {
+      navigateTo: (path: string) => void;
+      getRouteFromTab?: (tab: string) => string;
+      getTabFromRoute?: (route: string) => string;
+    };
+  }
+}
+
 const sidebarItems = [
-  { icon: "🏠", label: "Início", href: "#" },
-  { icon: "📁", label: "Registos", href: "#" },
-  { icon: "📞", label: "Outbounds", href: "#" },
-  { icon: "🛍️", label: "Vendas", href: "#" },
-  { icon: "📃", label: "Scripts", href: "#" },
-  { icon: "📔", label: "Documentação", href: "#" },
-  { icon: "📊", label: "KPI's", href: "#" },
+  { icon: "🏠", label: "Início", path: "/inicio" },
+  { icon: "📁", label: "Registos", path: "/registos" },
+  { icon: "📞", label: "Outbounds", path: "/outbounds" },
+  { icon: "🛍️", label: "Vendas", path: "/vendas" },
+  { icon: "📃", label: "Scripts", path: "/scripts" },
+  { icon: "📔", label: "Documentação", path: "/documentacao" },
+  { icon: "📊", label: "KPI's", path: "/kpis" },
 ];
 
 const bottomSidebarItems = [
-  { icon: "⚙️", label: "Definições", href: "#" },
-  { icon: "🔍", label: "Pesquisa", href: "#" },
+  { icon: "⚙️", label: "Definições", path: "/definicoes" },
+  { icon: "🔍", label: "Pesquisa", path: "/pesquisa" },
 ];
 
 interface SideBarNavItemProps {
   icon: string;
   label: string;
-  href: string;
+  path: string;
   expanded: boolean;
 }
 
-function SideBarNavItem({ icon, label, href, expanded }: SideBarNavItemProps) {
+function SideBarNavItem({ icon, label, path, expanded }: SideBarNavItemProps) {
+  const handleClick = () => {
+    console.log("SideBarNavItem clicked:", { path, expanded });
+    console.log("window.microFrontendNavigation:", window.microFrontendNavigation);
+
+    // Use global navigation helper to navigate
+    if (typeof window !== "undefined" && window.microFrontendNavigation) {
+      console.log("Attempting navigation to:", path);
+      window.microFrontendNavigation.navigateTo(path);
+    } else {
+      console.error("Navigation helper not available");
+      // Fallback to window.location
+      if (typeof window !== "undefined") {
+        window.location.href = path;
+      }
+    }
+  };
+
   return (
-    <a
-      href={href}
-      className={`flex items-center text-gray-700 hover:text-blue-500 transition-all duration-300 relative w-full rounded-lg p-2 hover:bg-gray-50`}
+    <button
+      onClick={handleClick}
+      className={`flex items-center text-gray-700 hover:text-blue-500 transition-all duration-300 relative w-full rounded-lg p-2 hover:bg-gray-50 text-left cursor-pointer`}
+      style={{ zIndex: 1 }}
     >
       <span className="icon text-xl w-8 flex-shrink-0 flex items-center justify-center">{icon}</span>
       <span
@@ -41,7 +70,7 @@ function SideBarNavItem({ icon, label, href, expanded }: SideBarNavItemProps) {
       >
         {label}
       </span>
-    </a>
+    </button>
   );
 }
 

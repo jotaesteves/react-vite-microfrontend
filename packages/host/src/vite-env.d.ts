@@ -66,3 +66,49 @@ declare module "mf-sidebar-nav/SideBarNav" {
   const SideBarNav: React.ComponentType;
   export default SideBarNav;
 }
+
+// Sidebar navigation screen microfrontends
+declare module "mf-inicio/Inicio" {
+  const Inicio: React.ComponentType;
+  export default Inicio;
+}
+
+declare module "mf-registos/Registos" {
+  const Registos: React.ComponentType;
+  export default Registos;
+}
+
+declare module "mf-outbounds/Outbounds" {
+  const Outbounds: React.ComponentType;
+  export default Outbounds;
+}
+
+declare module "mf-vendas/Vendas" {
+  const Vendas: React.ComponentType;
+  export default Vendas;
+}
+
+declare module "mf-scripts/Scripts" {
+  const Scripts: React.ComponentType;
+  export default Scripts;
+}
+
+declare module "mf-documentacao/Documentacao" {
+  const Documentacao: React.ComponentType;
+  export default Documentacao;
+}
+
+declare module "mf-kpis/KPIs" {
+  const KPIs: React.ComponentType;
+  export default KPIs;
+}
+
+declare module "mf-definicoes/Definicoes" {
+  const Definicoes: React.ComponentType;
+  export default Definicoes;
+}
+
+declare module "mf-pesquisa/Pesquisa" {
+  const Pesquisa: React.ComponentType;
+  export default Pesquisa;
+}

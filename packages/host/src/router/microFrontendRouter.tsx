@@ -6,7 +6,11 @@ import { useMicroFrontendTheme } from "../hooks/useMicroFrontend";
 // Lazy load micro-frontends
 const Header = lazy(() => import("mfHeader/Header"));
 const Footer = lazy(() => import("mfFooter/Footer"));
-const SideBarNav = React.lazy(() => import("mf-sidebar-nav/SideBarNav"));
+const SideBarNav = React.lazy(() =>
+  import("mf-sidebar-nav/SideBarNav").catch(() => ({
+    default: () => <div className="p-4 text-red-600">Failed to load Sidebar Navigation microfrontend</div>,
+  }))
+);
 
 // Import screen components
 const Visao360 = React.lazy(() => import("mf-visao-360/Visao360"));
@@ -14,6 +18,54 @@ const DadosPessoais = React.lazy(() => import("mf-dados-pessoais/DadosPessoais")
 const PatrimonioEProdutos = React.lazy(() => import("mf-patrimonio-e-produtos/PatrimonioEProdutos"));
 const CanaisEServicos = React.lazy(() => import("mf-canais-e-servicos/CanaisEServicos"));
 const HistoricoInteracoes = React.lazy(() => import("mf-historico-interacoes/HistoricoInteracoes"));
+
+// Import sidebar navigation screen components with error boundaries
+const Inicio = React.lazy(() =>
+  import("mf-inicio/Inicio").catch(() => ({
+    default: () => <div className="p-4 text-red-600">Failed to load Início microfrontend</div>,
+  }))
+);
+const Registos = React.lazy(() =>
+  import("mf-registos/Registos").catch(() => ({
+    default: () => <div className="p-4 text-red-600">Failed to load Registos microfrontend</div>,
+  }))
+);
+const Outbounds = React.lazy(() =>
+  import("mf-outbounds/Outbounds").catch(() => ({
+    default: () => <div className="p-4 text-red-600">Failed to load Outbounds microfrontend</div>,
+  }))
+);
+const Vendas = React.lazy(() =>
+  import("mf-vendas/Vendas").catch(() => ({
+    default: () => <div className="p-4 text-red-600">Failed to load Vendas microfrontend</div>,
+  }))
+);
+const Scripts = React.lazy(() =>
+  import("mf-scripts/Scripts").catch(() => ({
+    default: () => <div className="p-4 text-red-600">Failed to load Scripts microfrontend</div>,
+  }))
+);
+const Documentacao = React.lazy(() =>
+  import("mf-documentacao/Documentacao").catch(() => ({
+    default: () => <div className="p-4 text-red-600">Failed to load Documentação microfrontend</div>,
+  }))
+);
+const KPIs = React.lazy(() =>
+  import("mf-kpis/KPIs").catch(() => ({
+    default: () => <div className="p-4 text-red-600">Failed to load KPIs microfrontend</div>,
+  }))
+);
+const Definicoes = React.lazy(() =>
+  import("mf-definicoes/Definicoes").catch(() => ({
+    default: () => <div className="p-4 text-red-600">Failed to load Definições microfrontend</div>,
+  }))
+);
+const Pesquisa = React.lazy(() =>
+  import("mf-pesquisa/Pesquisa").catch(() => ({
+    default: () => <div className="p-4 text-red-600">Failed to load Pesquisa microfrontend</div>,
+  }))
+);
+
 import MainContent from "../components/MainContent";
 
 // Define route types
@@ -54,11 +106,22 @@ const RouterSync: React.FC = () => {
   // Update navigation helpers with router's navigate function
   React.useEffect(() => {
     navigationHelpers.navigateTo = (path: string) => {
+      console.log("Global navigation called with path:", path);
       navigate(path);
     };
     navigationHelpers.replaceTo = (path: string) => {
       navigate(path, { replace: true });
     };
+
+    // Update the global object with the new functions
+    if (typeof window !== "undefined") {
+      window.microFrontendNavigation = {
+        ...navigationHelpers,
+        getRouteFromTab: navigationHelpers.getRouteFromTab,
+        getTabFromRoute: navigationHelpers.getTabFromRoute,
+      };
+      console.log("Updated global navigation helper:", window.microFrontendNavigation);
+    }
   }, [navigate]);
 
   // Subscribe to global store changes and update route accordingly
@@ -124,17 +187,109 @@ const RootLayout: React.FC = () => {
 
 // Default routes for the host application - including both legacy and new routes
 const defaultRoutes: MicroFrontendRoute[] = [
-  // Tab-based routes (primary navigation)
+  // Sidebar navigation routes (main navigation)
   {
     path: "/",
     component: (props: any) => (
       <Suspense fallback={<div>Loading...</div>}>
-        <Visao360 {...props} />
+        <Inicio {...props} />
       </Suspense>
     ),
-    title: "Visão 360",
-    description: "Visão completa do cliente",
+    title: "Início",
+    description: "Página inicial do sistema",
   },
+  {
+    path: "/inicio",
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Inicio {...props} />
+      </Suspense>
+    ),
+    title: "Início",
+    description: "Página inicial do sistema",
+  },
+  {
+    path: "/registos",
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Registos {...props} />
+      </Suspense>
+    ),
+    title: "Registos",
+    description: "Gestão de registos",
+  },
+  {
+    path: "/outbounds",
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Outbounds {...props} />
+      </Suspense>
+    ),
+    title: "Outbounds",
+    description: "Gestão de chamadas de saída",
+  },
+  {
+    path: "/vendas",
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Vendas {...props} />
+      </Suspense>
+    ),
+    title: "Vendas",
+    description: "Gestão de vendas",
+  },
+  {
+    path: "/scripts",
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Scripts {...props} />
+      </Suspense>
+    ),
+    title: "Scripts",
+    description: "Gestão de scripts",
+  },
+  {
+    path: "/documentacao",
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Documentacao {...props} />
+      </Suspense>
+    ),
+    title: "Documentação",
+    description: "Documentação do sistema",
+  },
+  {
+    path: "/kpis",
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <KPIs {...props} />
+      </Suspense>
+    ),
+    title: "KPI's",
+    description: "Indicadores de performance",
+  },
+  {
+    path: "/definicoes",
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Definicoes {...props} />
+      </Suspense>
+    ),
+    title: "Definições",
+    description: "Configurações do sistema",
+  },
+  {
+    path: "/pesquisa",
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Pesquisa {...props} />
+      </Suspense>
+    ),
+    title: "Pesquisa",
+    description: "Pesquisa no sistema",
+  },
+
+  // Tab-based routes (legacy header navigation)
   {
     path: "/360vision",
     component: (props: any) => (
@@ -185,6 +340,7 @@ const defaultRoutes: MicroFrontendRoute[] = [
     title: "Histórico de Interações",
     description: "Histórico de interações com o cliente",
   },
+
   // Legacy routes for backward compatibility
   {
     path: "/home",
@@ -315,6 +471,17 @@ export const navigationHelpers = {
   // Map tab names to routes for backward compatibility
   getRouteFromTab: (tab: string) => {
     const tabToRoute: Record<string, string> = {
+      // Sidebar navigation routes (primary)
+      inicio: "/inicio",
+      registos: "/registos",
+      outbounds: "/outbounds",
+      vendas: "/vendas",
+      scripts: "/scripts",
+      documentacao: "/documentacao",
+      kpis: "/kpis",
+      definicoes: "/definicoes",
+      pesquisa: "/pesquisa",
+      // Header tab routes (secondary)
       "360vision": "/360vision",
       personalData: "/personal-data",
       assetsProducts: "/assets-products",
@@ -326,13 +493,24 @@ export const navigationHelpers = {
       services: "/services",
       contact: "/contact",
     };
-    return tabToRoute[tab] || "/360vision";
+    return tabToRoute[tab] || "/inicio";
   },
 
   // Map routes to tab names for backward compatibility
   getTabFromRoute: (route: string) => {
     const routeToTab: Record<string, string> = {
-      "/": "360vision",
+      // Sidebar navigation routes (primary)
+      "/": "inicio",
+      "/inicio": "inicio",
+      "/registos": "registos",
+      "/outbounds": "outbounds",
+      "/vendas": "vendas",
+      "/scripts": "scripts",
+      "/documentacao": "documentacao",
+      "/kpis": "kpis",
+      "/definicoes": "definicoes",
+      "/pesquisa": "pesquisa",
+      // Header tab routes (secondary)
       "/360vision": "360vision",
       "/personal-data": "personalData",
       "/assets-products": "assetsProducts",
@@ -344,7 +522,7 @@ export const navigationHelpers = {
       "/services": "services",
       "/contact": "contact",
     };
-    return routeToTab[route] || "360vision";
+    return routeToTab[route] || "inicio";
   },
 };
 
@@ -359,11 +537,23 @@ declare global {
 }
 
 if (typeof window !== "undefined") {
+  // Create a dynamic navigation object that always uses the latest functions
   window.microFrontendNavigation = {
-    ...navigationHelpers,
+    navigateTo: (path: string) => {
+      console.log("Global navigateTo called with:", path);
+      return navigationHelpers.navigateTo(path);
+    },
+    replaceTo: (path: string) => {
+      return navigationHelpers.replaceTo(path);
+    },
+    goBack: navigationHelpers.goBack,
+    goForward: navigationHelpers.goForward,
+    getCurrentPath: navigationHelpers.getCurrentPath,
+    isActiveRoute: navigationHelpers.isActiveRoute,
     getRouteFromTab: navigationHelpers.getRouteFromTab,
     getTabFromRoute: navigationHelpers.getTabFromRoute,
   };
+  console.log("Initial global navigation setup:", window.microFrontendNavigation);
 }
 
 export default createMicroFrontendRouter;
