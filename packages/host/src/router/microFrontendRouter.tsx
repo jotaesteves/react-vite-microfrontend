@@ -6,6 +6,7 @@ import { useMicroFrontendTheme } from "../hooks/useMicroFrontend";
 // Lazy load micro-frontends
 const Header = lazy(() => import("mfHeader/Header"));
 const Footer = lazy(() => import("mfFooter/Footer"));
+const SideBarNav = React.lazy(() => import("mf-sidebar-nav/SideBarNav"));
 
 // Import screen components
 const Visao360 = React.lazy(() => import("mf-visao-360/Visao360"));
@@ -99,9 +100,18 @@ const RootLayout: React.FC = () => {
         </Suspense>
       </ErrorBoundary>
 
-      <main className="flex-1 p-8 bg-white text-gray-800">
-        <Outlet />
-      </main>
+      <div className="flex flex-1">
+        <aside className="relative bg-gray-50">
+          <ErrorBoundary>
+            <Suspense fallback={<div className="p-4 text-center">Loading Sidebar...</div>}>
+              <SideBarNav />
+            </Suspense>
+          </ErrorBoundary>
+        </aside>
+        <main className="flex-1 p-8 bg-gray-100 text-gray-800">
+          <Outlet />
+        </main>
+      </div>
 
       <ErrorBoundary>
         <Suspense fallback={<div className="p-4 text-center">Loading Footer...</div>}>

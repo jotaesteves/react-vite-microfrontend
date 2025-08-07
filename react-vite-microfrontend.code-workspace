@@ -39,6 +39,10 @@
     {
       "name": "👁️ Visão 360 MF",
       "path": "./packages/mf-visao-360"
+    },
+    {
+      "name": "🧭 Sidebar Navigation MF",
+      "path": "./packages/mf-sidebar-nav"
     }
   ],
   "settings": {
@@ -53,7 +57,8 @@
       "packages/mf-dados-pessoais",
       "packages/mf-historico-interacoes",
       "packages/mf-patrimonio-e-produtos",
-      "packages/mf-visao-360"
+      "packages/mf-visao-360",
+      "packages/mf-sidebar-nav"
     ],
     "files.exclude": {
       "**/node_modules": true,

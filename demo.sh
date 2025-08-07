@@ -2,7 +2,20 @@
 
 echo "🎬 React + Vite Micro-Frontend Demo"
 echo "===================================echo "This will secho "📋 Demo checklist:"
+echo "  1echo "📋 Demo checklist:"
 echo "  1. Visit http://localhost:3000 to see integrated app"
+echo "  2. Visit http://localhost:3008 to see shared library info"
+echo "  3. Visit http://localhost:3001 to see header standalone"
+echo "  4. Visit http://localhost:3002 to see footer standalone"
+echo "  5. Visit http://localhost:3003 to see Canais e Serviços standalone"
+echo "  6. Visit http://localhost:3004 to see Dados Pessoais standalone"
+echo "  7. Visit http://localhost:3005 to see Histórico de Interações standalone"
+echo "  8. Visit http://localhost:3006 to see Patrimônio e Produtos standalone"
+echo "  9. Visit http://localhost:3007 to see Visão 360 standalone"
+echo " 10. Visit http://localhost:3009 to see Sidebar Navigation standalone"
+echo " 11. Try editing components in any microfrontend src/ directory"
+echo " 12. Watch hot reload in both standalone and integrated views"
+echo " 13. Stop a micro-frontend Ctrl+C to see error boundaries"://localhost:3000 to see integrated app"
 echo "  2. Visit http://localhost:3008 to see shared library (no UI)"
 echo "  3. Visit http://localhost:3001 to see header standalone"
 echo "  4. Visit http://localhost:3002 to see footer standalone"
@@ -92,12 +105,12 @@ if ! check_port 3007; then
     PORTS_AVAILABLE=false
 fi
 
-if ! check_port 3008; then
+if ! check_port 3009; then
     PORTS_AVAILABLE=false
 fi
 
 if [ "$PORTS_AVAILABLE" = false ]; then
-    echo "❌ Some required ports are in use. Please free ports 3000-3008."
+    echo "❌ Some required ports are in use. Please free ports 3000-3009."
     exit 1
 fi
 
@@ -184,6 +197,10 @@ if [ ! -d "packages/mf-visao-360/node_modules" ]; then
     echo "Installing Visão 360 MF dependencies..."
     cd packages/mf-visao-360 && npm install && cd ../..
 fi
+if [ ! -d "packages/mf-sidebar-nav/node_modules" ]; then
+    echo "Installing Sidebar Navigation MF dependencies..."
+    cd packages/mf-sidebar-nav && npm install && cd ../..
+fi
 
 echo "✅ Dependencies ready"
 
@@ -197,4 +214,5 @@ concurrently \
   "cd packages/mf-dados-pessoais && npm run build && npm run preview" \
   "cd packages/mf-historico-interacoes && npm run build && npm run preview" \
   "cd packages/mf-patrimonio-e-produtos && npm run build && npm run preview" \
-  "cd packages/mf-visao-360 && npm run build && npm run preview"
+  "cd packages/mf-visao-360 && npm run build && npm run preview" \
+  "cd packages/mf-sidebar-nav && npm run build && npm run preview"

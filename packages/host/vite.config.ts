@@ -18,6 +18,7 @@ export default defineConfig({
         "mf-historico-interacoes": "http://localhost:3005/assets/remoteEntry.js",
         "mf-patrimonio-e-produtos": "http://localhost:3006/assets/remoteEntry.js",
         "mf-visao-360": "http://localhost:3007/assets/remoteEntry.js",
+        "mf-sidebar-nav": "http://localhost:3009/assets/remoteEntry.js",
       },
       shared: {
         react: {},
