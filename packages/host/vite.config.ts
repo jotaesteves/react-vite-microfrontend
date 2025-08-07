@@ -12,6 +12,11 @@ export default defineConfig({
       remotes: {
         mfHeader: "http://localhost:3001/assets/remoteEntry.js",
         mfFooter: "http://localhost:3002/assets/remoteEntry.js",
+        "mf-canais-e-servicos": "http://localhost:3003/assets/remoteEntry.js",
+        "mf-dados-pessoais": "http://localhost:3004/assets/remoteEntry.js",
+        "mf-historico-interacoes": "http://localhost:3005/assets/remoteEntry.js",
+        "mf-patrimonio-e-produtos": "http://localhost:3006/assets/remoteEntry.js",
+        "mf-visao-360": "http://localhost:3007/assets/remoteEntry.js",
       },
       shared: {
         react: {},

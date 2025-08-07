@@ -8,11 +8,11 @@ const Header = lazy(() => import("mfHeader/Header"));
 const Footer = lazy(() => import("mfFooter/Footer"));
 
 // Import screen components
-import Visao360 from "../screens/Visao360";
-import DadosPessoais from "../screens/DadosPessoais";
-import PatrimonioEProdutos from "../screens/PatrimonioEProdutos";
-import CanaisEServicos from "../screens/CanaisEServicos";
-import HistoricoInteracoes from "../screens/HistoricoInteracoes";
+const Visao360 = React.lazy(() => import("mf-visao-360/Visao360"));
+const DadosPessoais = React.lazy(() => import("mf-dados-pessoais/DadosPessoais"));
+const PatrimonioEProdutos = React.lazy(() => import("mf-patrimonio-e-produtos/PatrimonioEProdutos"));
+const CanaisEServicos = React.lazy(() => import("mf-canais-e-servicos/CanaisEServicos"));
+const HistoricoInteracoes = React.lazy(() => import("mf-historico-interacoes/HistoricoInteracoes"));
 import MainContent from "../components/MainContent";
 
 // Define route types
@@ -117,37 +117,61 @@ const defaultRoutes: MicroFrontendRoute[] = [
   // Tab-based routes (primary navigation)
   {
     path: "/",
-    component: Visao360,
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Visao360 {...props} />
+      </Suspense>
+    ),
     title: "Visão 360",
     description: "Visão completa do cliente",
   },
   {
     path: "/360vision",
-    component: Visao360,
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <Visao360 {...props} />
+      </Suspense>
+    ),
     title: "Visão 360",
     description: "Visão completa do cliente",
   },
   {
     path: "/personal-data",
-    component: DadosPessoais,
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <DadosPessoais {...props} />
+      </Suspense>
+    ),
     title: "Dados Pessoais",
     description: "Informações pessoais do cliente",
   },
   {
     path: "/assets-products",
-    component: PatrimonioEProdutos,
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <PatrimonioEProdutos {...props} />
+      </Suspense>
+    ),
     title: "Patrimônio e Produtos",
     description: "Produtos e patrimônio do cliente",
   },
   {
     path: "/channels-services",
-    component: CanaisEServicos,
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <CanaisEServicos {...props} />
+      </Suspense>
+    ),
     title: "Canais e Serviços",
     description: "Canais de atendimento e serviços",
   },
   {
     path: "/history-interactions",
-    component: HistoricoInteracoes,
+    component: (props: any) => (
+      <Suspense fallback={<div>Loading...</div>}>
+        <HistoricoInteracoes {...props} />
+      </Suspense>
+    ),
     title: "Histórico de Interações",
     description: "Histórico de interações com o cliente",
   },
