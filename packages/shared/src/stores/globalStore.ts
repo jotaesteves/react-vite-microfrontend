@@ -213,9 +213,6 @@ export const useGlobalStore = create<GlobalState & GlobalActions>()(
 declare global {
   interface Window {
     globalMicroFrontendStore: typeof useGlobalStore;
-    microFrontendEventBus?: {
-      emit: (event: { type: string; payload: any }) => void;
-    };
     microFrontendNavigation?: {
       navigateTo: (path: string) => void;
       getRouteFromTab?: (tab: string) => string;

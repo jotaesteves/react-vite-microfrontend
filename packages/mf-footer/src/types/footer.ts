@@ -7,4 +7,5 @@ export interface FooterTag {
 
 export interface FooterTagsProps {
   tags?: FooterTag[];
+  onTagClose?: (page: string) => void; // Optional callback for when a tag is closed
 }

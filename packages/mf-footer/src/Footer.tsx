@@ -21,14 +21,15 @@ interface FooterProps {
  */
 const Footer: React.FC<FooterProps> = ({ customTags, useHistory = true }) => {
   const { theme } = useTheme();
-  const historyTags = useNavigationHistory();
+  const { historyTags, excludePageFromHistory } = useNavigationHistory();
 
   // Determine which tags to use
-  const tagsToUse = customTags || (useHistory ? historyTags : undefined);
+  // Priority: customTags > historyTags > undefined (which will show default tags)
+  const tagsToUse = customTags || (useHistory && historyTags.length > 0 ? historyTags : undefined);
 
   return (
     <footer className={`footer ${theme}`}>
-      <FooterTags tags={tagsToUse} />
+      <FooterTags tags={tagsToUse} onTagClose={useHistory ? excludePageFromHistory : undefined} />
       <div className="footer-chat">
         <button
           className="footer-chat-button"
@@ -44,5 +45,4 @@ const Footer: React.FC<FooterProps> = ({ customTags, useHistory = true }) => {
     </footer>
   );
 };
-
 export default Footer;

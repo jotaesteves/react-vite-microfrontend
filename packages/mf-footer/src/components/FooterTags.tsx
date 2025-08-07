@@ -1,58 +1,38 @@
 import React from "react";
 import { useNavigation } from "../store/microFrontendStore";
 import { FooterTag, FooterTagsProps } from "../types";
-import { removePageFromHistory } from "../utils/navigationUtils";
 
-const FooterTags: React.FC<FooterTagsProps> = ({ tags }) => {
+const FooterTags: React.FC<FooterTagsProps> = ({ tags, onTagClose }) => {
   const { currentPage, navigateTo } = useNavigation();
 
   // Default tags if none provided
   const defaultTags: FooterTag[] = [
-    { id: "home", label: "Home", page: "home" },
-    { id: "about", label: "About", page: "about" },
-    { id: "contact", label: "Contact", page: "contact" },
+    { id: "default-home", label: "Home", page: "home" },
+    { id: "default-about", label: "Sobre", page: "about" },
+    { id: "default-contact", label: "Contato", page: "contact" },
   ];
 
-  const [footerTags, setFooterTags] = React.useState<FooterTag[]>(() => {
-    // Use provided tags, or default tags if no tags provided or empty array
-    return tags && tags.length > 0 ? tags : defaultTags;
-  });
-
-  React.useEffect(() => {
-    // Update tags when props change
-    if (tags && tags.length > 0) {
-      setFooterTags(tags);
-    } else if (!tags) {
-      // If no tags provided at all, use defaults
-      setFooterTags(defaultTags);
-    }
-    // If tags is an empty array, keep current state (likely from history)
-  }, [tags]);
+  // Use provided tags, or default tags if no tags provided
+  const tagsToDisplay = tags && tags.length > 0 ? tags : defaultTags;
 
   const handleFooterNavClick = (page: string, event: React.MouseEvent) => {
     event.preventDefault();
     navigateTo(page);
   };
 
-  const handleTagClose = (event: React.MouseEvent, tagId: string) => {
+  const handleTagClose = (event: React.MouseEvent, tag: FooterTag) => {
     event.stopPropagation();
 
-    // Find the tag being closed
-    const tagToClose = footerTags.find((tag) => tag.id === tagId);
-
-    // If it's a history tag, remove it from the global navigation history
-    // This will permanently remove the page from the navigation history
-    if (tagToClose?.isFromHistory) {
-      removePageFromHistory(tagToClose.page);
+    // Call the onTagClose callback for all tags that can be closed
+    // Note: Closed history tags can be re-added by navigating to them again
+    if (onTagClose) {
+      onTagClose(tag.page);
     }
-
-    // Remove the tag from the local state (this will hide it from the footer)
-    setFooterTags((prevTags) => prevTags.filter((tag) => tag.id !== tagId));
   };
 
   return (
     <div className="footer-tags">
-      {footerTags.map((tag, index) => (
+      {tagsToDisplay.map((tag, index) => (
         <span
           key={tag.id}
           className={`footer-tag ${currentPage === tag.page ? "active" : ""} ${tag.isFromHistory ? "history-tag" : ""}`}
@@ -61,20 +41,33 @@ const FooterTags: React.FC<FooterTagsProps> = ({ tags }) => {
             display: "inline-flex",
             alignItems: "center",
             cursor: "pointer",
-            marginRight: index < footerTags.length - 1 ? "8px" : "0",
+            marginRight: index < tagsToDisplay.length - 1 ? "8px" : "0",
           }}
           title={tag.isFromHistory ? `From navigation history: ${tag.label}` : tag.label}
         >
           {tag.isFromHistory && <span style={{ marginRight: "4px", opacity: 0.7 }}>🕒</span>}
           {tag.label}
-          <button
-            className="footer-tag-close"
-            onClick={(e) => handleTagClose(e, tag.id)}
-            aria-label={`Close ${tag.label} tag`}
-            type="button"
-          >
-            ×
-          </button>
+          {/* Show close button only for history tags */}
+          {tag.isFromHistory && (
+            <button
+              className="footer-tag-close"
+              onClick={(e) => handleTagClose(e, tag)}
+              aria-label={`Close ${tag.label} tag`}
+              type="button"
+              style={{
+                marginLeft: "4px",
+                background: "none",
+                border: "none",
+                color: "inherit",
+                cursor: "pointer",
+                fontSize: "14px",
+                opacity: 0.7,
+                padding: "0 2px",
+              }}
+            >
+              ×
+            </button>
+          )}
         </span>
       ))}
     </div>
