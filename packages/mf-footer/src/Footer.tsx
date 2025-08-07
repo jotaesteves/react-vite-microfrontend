@@ -3,7 +3,7 @@ import "./Footer.css";
 import { useTheme, useNavigation } from "./store/microFrontendStore";
 
 const Footer: React.FC = () => {
-  const { theme, isDark } = useTheme();
+  const { theme } = useTheme();
   const { currentPage, navigateTo } = useNavigation();
 
   const handleFooterNavClick = (page: string, event: React.MouseEvent) => {
@@ -13,99 +13,73 @@ const Footer: React.FC = () => {
 
   return (
     <footer className={`footer ${theme}`}>
-      <div className="footer-container">
-        <div className="footer-section">
-          <h3>Company</h3>
-          <ul>
-            <li>
-              <a
-                href="#about"
-                onClick={(e) => handleFooterNavClick("about", e)}
-                className={currentPage === "about" ? "active" : ""}
-              >
-                About Us
-              </a>
-            </li>
-            <li>
-              <a href="#careers">Careers</a>
-            </li>
-            <li>
-              <a href="#news">News</a>
-            </li>
-            <li>
-              <a href="#investor">Investor Relations</a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="footer-section">
-          <h3>Support</h3>
-          <ul>
-            <li>
-              <a href="#help">Help Center</a>
-            </li>
-            <li>
-              <a
-                href="#contact"
-                onClick={(e) => handleFooterNavClick("contact", e)}
-                className={currentPage === "contact" ? "active" : ""}
-              >
-                Contact Us
-              </a>
-            </li>
-            <li>
-              <a href="#status">Status</a>
-            </li>
-            <li>
-              <a href="#community">Community</a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="footer-section">
-          <h3>Legal</h3>
-          <ul>
-            <li>
-              <a href="#privacy">Privacy Policy</a>
-            </li>
-            <li>
-              <a href="#terms">Terms of Service</a>
-            </li>
-            <li>
-              <a href="#cookies">Cookie Policy</a>
-            </li>
-            <li>
-              <a href="#licenses">Licenses</a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="footer-section">
-          <h3>Connect</h3>
-          <div className="social-links">
-            <a href="#twitter" className="social-link">
-              🐦 Twitter
-            </a>
-            <a href="#linkedin" className="social-link">
-              💼 LinkedIn
-            </a>
-            <a href="#github" className="social-link">
-              🐱 GitHub
-            </a>
-            <a href="#discord" className="social-link">
-              💬 Discord
-            </a>
-          </div>
-          <div className="theme-info">
-            <small>Theme: {isDark ? "🌙 Dark" : "☀️ Light"}</small>
-          </div>
-        </div>
+      <div className="footer-tags">
+        <span
+          className={`footer-tag ${currentPage === "home" ? "active" : ""}`}
+          onClick={(e) => handleFooterNavClick("home", e as React.MouseEvent)}
+          style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", marginRight: "8px" }}
+        >
+          Home
+          <button
+            className="footer-tag-close"
+            onClick={(e) => {
+              e.stopPropagation();
+              // Optionally handle tag close logic here
+            }}
+            aria-label="Close Home tag"
+            type="button"
+          >
+            ×
+          </button>
+        </span>
+        <span
+          className={`footer-tag ${currentPage === "about" ? "active" : ""}`}
+          onClick={(e) => handleFooterNavClick("about", e as React.MouseEvent)}
+          style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", marginRight: "8px" }}
+        >
+          About
+          <button
+            className="footer-tag-close"
+            onClick={(e) => {
+              e.stopPropagation();
+              // Optionally handle tag close logic here
+            }}
+            aria-label="Close About tag"
+            type="button"
+          >
+            ×
+          </button>
+        </span>
+        <span
+          className={`footer-tag ${currentPage === "contact" ? "active" : ""}`}
+          onClick={(e) => handleFooterNavClick("contact", e as React.MouseEvent)}
+          style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
+        >
+          Contact
+          <button
+            className="footer-tag-close"
+            onClick={(e) => {
+              e.stopPropagation();
+              // Optionally handle tag close logic here
+            }}
+            aria-label="Close Contact tag"
+            type="button"
+          >
+            ×
+          </button>
+        </span>
       </div>
-
-      <div className="footer-bottom">
-        <p>&copy; 2024 Micro Frontend Architecture. All rights reserved.</p>
-        <p>Built with React + Vite + Module Federation + Zustand</p>
-        <small>Current page: {currentPage}</small>
+      <div className="footer-chat">
+        <button
+          className="footer-chat-button"
+          onClick={() => {
+            // Handle chat button click logic here
+            console.log("Chat button clicked");
+          }}
+          aria-label="Open chat"
+        >
+          💬 Go<span style={{ fontWeight: "bold" }}>IZI</span>
+        </button>
       </div>
     </footer>
   );

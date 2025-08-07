@@ -9,18 +9,52 @@
       "path": "./packages/host"
     },
     {
+      "name": "🔗 Shared Library",
+      "path": "./packages/shared"
+    },
+    {
       "name": "🎯 Header MF",
       "path": "./packages/mf-header"
     },
     {
       "name": "🦶 Footer MF",
       "path": "./packages/mf-footer"
+    },
+    {
+      "name": "📡 Canais e Serviços MF",
+      "path": "./packages/mf-canais-e-servicos"
+    },
+    {
+      "name": "🧑‍💼 Dados Pessoais MF",
+      "path": "./packages/mf-dados-pessoais"
+    },
+    {
+      "name": "🕑 Histórico de Interações MF",
+      "path": "./packages/mf-historico-interacoes"
+    },
+    {
+      "name": "💰 Patrimônio e Produtos MF",
+      "path": "./packages/mf-patrimonio-e-produtos"
+    },
+    {
+      "name": "👁️ Visão 360 MF",
+      "path": "./packages/mf-visao-360"
     }
   ],
   "settings": {
     "typescript.preferences.includePackageJsonAutoImports": "auto",
     "typescript.suggest.autoImports": true,
-    "eslint.workingDirectories": ["packages/host", "packages/mf-header", "packages/mf-footer"],
+    "eslint.workingDirectories": [
+      "packages/host",
+      "packages/shared",
+      "packages/mf-header",
+      "packages/mf-footer",
+      "packages/mf-canais-e-servicos",
+      "packages/mf-dados-pessoais",
+      "packages/mf-historico-interacoes",
+      "packages/mf-patrimonio-e-produtos",
+      "packages/mf-visao-360"
+    ],
     "files.exclude": {
       "**/node_modules": true,
       "**/dist": true,
@@ -58,10 +92,26 @@
         "problemMatcher": []
       },
       {
-        "label": "Start All Applications",
+        "label": "Start All Microfrontends (Demo)",
+        "type": "shell",
+        "command": "./demo.sh",
+        "group": "build",
+        "presentation": {
+          "echo": true,
+          "reveal": "always",
+          "focus": false,
+          "panel": "shared"
+        },
+        "problemMatcher": []
+      },
+      {
+        "label": "Start Host Only",
         "type": "shell",
         "command": "npm",
         "args": ["run", "dev"],
+        "options": {
+          "cwd": "${workspaceFolder}/packages/host"
+        },
         "group": "build",
         "presentation": {
           "echo": true,
@@ -76,20 +126,6 @@
         "type": "shell",
         "command": "npm",
         "args": ["run", "build"],
-        "group": "build",
-        "presentation": {
-          "echo": true,
-          "reveal": "always",
-          "focus": false,
-          "panel": "shared"
-        },
-        "problemMatcher": []
-      },
-      {
-        "label": "Start Shell Only",
-        "type": "shell",
-        "command": "npm",
-        "args": ["run", "dev:shell"],
         "group": "build",
         "presentation": {
           "echo": true,

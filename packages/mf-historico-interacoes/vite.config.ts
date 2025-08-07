@@ -11,6 +11,9 @@ export default defineConfig({
       exposes: {
         "./HistoricoInteracoes": "./src/HistoricoInteracoes.tsx",
       },
+      remotes: {
+        shared: "http://localhost:3008/assets/remoteEntry.js",
+      },
       shared: {
         react: {},
         "react-dom": {},

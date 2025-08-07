@@ -67,7 +67,7 @@ const Header: React.FC = () => {
 
   return (
     <header className={`${theme}`}>
-      <div className="flex p-4 border-2 border-primary text-black bg-white">
+      <div className="flex p-4 text-black bg-white">
         {/* Left section (70%) - logo, name, and navigation */}
         <div className="flex-grow flex items-center justify-between" style={{ width: "70%" }}>
           {/* Logo and name section */}

@@ -1,7 +1,45 @@
 #!/bin/bash
 
 echo "🎬 React + Vite Micro-Frontend Demo"
-echo "==================================="
+echo "===================================echo "This will secho "📋 Demo checklist:"
+echo "  1. Visit http://localhost:3000 to see integrated app"
+echo "  2. Visit http://localhost:3008 to see shared library (no UI)"
+echo "  3. Visit http://localhost:3001 to see header standalone"
+echo "  4. Visit http://localhost:3002 to see footer standalone"
+echo "  5. Visit http://localhost:3003 to see Canais e Serviços standalone"
+echo "  6. Visit http://localhost:3004 to see Dados Pessoais standalone"
+echo "  7. Visit http://localhost:3005 to see Histórico de Interações standalone"
+echo "  8. Visit http://localhost:3006 to see Patrimônio e Produtos standalone"
+echo "  9. Visit http://localhost:3007 to see Visão 360 standalone"
+echo " 10. Try editing components in any microfrontend src/ directory"
+echo " 11. Watch hot reload in both standalone and integrated views"
+echo " 12. Stop a micro-frontend (Ctrl+C) to see error boundaries""  🐚 Host application at http://localhost:3000"
+echo "  📚 Shared library at http://localhost:3008"
+echo "  🎯 Header micro-frontend at http://localhost:3001"
+echo "  🦶 Footer micro-frontend at http://localhost:3002"
+echo "  📡 Canais e Serviços micro-frontend at http://localhost:3003"
+echo "  🧑‍💼 Dados Pessoais micro-frontend at http://localhost:3004"
+echo "  🕑 Histórico de Interações micro-frontend at http://localhost:3005"
+echo "  💰 Patrimônio e Produtos micro-frontend at http://localhost:3006"
+echo "  👁️ Visão 360 micro-frontend at http://localhost:3007"
+echo "  🔗 Shared library at http://localhost:3008"
+echo ""
+echo "📋 Demo checklist:"
+echo "  1. Visit http://localhost:3000 to see integrated app"
+echo "  2. Visit http://localhost:3001 to see header standalone"
+echo "  3. Visit http://localhost:3002 to see footer standalone"
+echo "  4. Visit http://localhost:3003 to see Canais e Serviços standalone"
+echo "  5. Visit http://localhost:3004 to see Dados Pessoais standalone"
+echo "  6. Visit http://localhost:3005 to see Histórico de Interações standalone"
+echo "  7. Visit http://localhost:3006 to see Patrimônio e Produtos standalone"
+echo "  8. Visit http://localhost:3007 to see Visão 360 standalone"
+echo "  9. Visit http://localhost:3008 to see Shared library info"
+echo " 10. Try editing components in any microfrontend src/ directory"
+echo " 11. Watch hot reload in both standalone and integrated views"
+echo " 12. Stop a micro-frontend (Ctrl+C) to see error boundaries"
+echo ""
+echo "Press Ctrl+C to stop all applications"
+echo ""
 
 if ! command -v concurrently &> /dev/null; then
     echo "Installing 'concurrently' globally (required to run all microfrontends in parallel)..."
@@ -54,8 +92,12 @@ if ! check_port 3007; then
     PORTS_AVAILABLE=false
 fi
 
+if ! check_port 3008; then
+    PORTS_AVAILABLE=false
+fi
+
 if [ "$PORTS_AVAILABLE" = false ]; then
-    echo "❌ Some required ports are in use. Please free ports 3000-3007."
+    echo "❌ Some required ports are in use. Please free ports 3000-3008."
     exit 1
 fi
 
@@ -68,6 +110,11 @@ echo "📦 Checking dependencies..."
 if [ ! -d "node_modules" ]; then
     echo "Installing root dependencies..."
     npm install
+fi
+
+if [ ! -d "packages/shared/node_modules" ]; then
+    echo "Installing shared library dependencies..."
+    cd packages/shared && npm install && cd ../..
 fi
 
 if [ ! -d "packages/host/node_modules" ]; then
@@ -143,6 +190,7 @@ echo "✅ Dependencies ready"
 # Start all applications in parallel
 concurrently \
   "cd packages/host && npm run dev" \
+  "cd packages/shared && npm run build && npm run preview" \
   "cd packages/mf-header && npm run build && npm run preview" \
   "cd packages/mf-footer && npm run build && npm run preview" \
   "cd packages/mf-canais-e-servicos && npm run build && npm run preview" \

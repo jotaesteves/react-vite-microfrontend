@@ -13,6 +13,9 @@ export default defineConfig({
       exposes: {
         "./Header": "./src/Header.tsx",
       },
+      remotes: {
+        shared: "http://localhost:3008/assets/remoteEntry.js",
+      },
       shared: {
         react: {},
         "react-dom": {},

@@ -10,6 +10,7 @@ export default defineConfig({
     federation({
       name: "host",
       remotes: {
+        shared: "http://localhost:3008/assets/remoteEntry.js",
         mfHeader: "http://localhost:3001/assets/remoteEntry.js",
         mfFooter: "http://localhost:3002/assets/remoteEntry.js",
         "mf-canais-e-servicos": "http://localhost:3003/assets/remoteEntry.js",

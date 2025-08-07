@@ -310,6 +310,11 @@ export const navigationHelpers = {
       assetsProducts: "/assets-products",
       channelsAndServices: "/channels-services",
       historyInteractions: "/history-interactions",
+      // Legacy navigation routes for footer
+      home: "/home",
+      about: "/about",
+      services: "/services",
+      contact: "/contact",
     };
     return tabToRoute[tab] || "/360vision";
   },
@@ -323,6 +328,11 @@ export const navigationHelpers = {
       "/assets-products": "assetsProducts",
       "/channels-services": "channelsAndServices",
       "/history-interactions": "historyInteractions",
+      // Legacy navigation routes for footer
+      "/home": "home",
+      "/about": "about",
+      "/services": "services",
+      "/contact": "contact",
     };
     return routeToTab[route] || "360vision";
   },

@@ -1,76 +1,76 @@
 .footer {
-  background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-  color: white;
-  padding: 3rem 0 1rem;
-  margin-top: auto;
-}
-
-.footer-container {
-  max-width: 1200px;
-  margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-  padding: 0 2rem;
-}
-
-.footer-section h3 {
-  margin-bottom: 1rem;
-  color: #ecf0f1;
-  font-size: 1.2rem;
-  border-bottom: 2px solid #3498db;
-  padding-bottom: 0.5rem;
-  display: inline-block;
-}
-
-.footer-section ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-}
-
-.footer-section li {
-  margin-bottom: 0.8rem;
-}
-
-.footer-section a {
-  color: #bdc3c7;
-  text-decoration: none;
-  transition: color 0.3s ease;
-}
-
-.footer-section a:hover {
-  color: #3498db;
-}
-
-.social-links {
   display: flex;
-  flex-direction: column;
-  gap: 0.8rem;
-}
-
-.social-link {
-  display: flex;
+  flex-direction: row;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem;
-  border-radius: 4px;
-  transition: background-color 0.3s ease;
+  justify-content: space-between;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-top: 1px solid #dee2e6;
 }
 
-.social-link:hover {
-  background-color: rgba(52, 152, 219, 0.1);
+.footer-tags {
+  display: flex;
+  justify-content: start;
+  align-items: center;
 }
 
-.footer-bottom {
-  border-top: 1px solid #34495e;
-  margin-top: 2rem;
-  padding: 1rem 2rem;
-  text-align: center;
-  color: #95a5a6;
+.footer-tag {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  background-color: #bdbfc2;
+  color: #5e5e5e;
+  font-size: 14px;
+  border-radius: 5px;
+  padding: 5px 10px;
 }
 
-.footer-bottom p {
-  margin: 0.5rem 0;
-  font-size: 0.9rem;
+.footer-tag:hover {
+  background-color: #a0a1a3;
+  color: #fff;
+}
+
+.footer-tag-close {
+  margin-left: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 1em;
+  color: #5e5e5e;
+}
+.footer-tag:hover > .footer-tag-close {
+  color: #fff;
+}
+
+.footer-chat-button {
+  background-color: #d70664;
+  background-image: linear-gradient(to bottom, #d70664, #b0054f);
+  color: white;
+  border: none;
+  padding: 10px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+}
+.footer-chat-button:hover {
+  background-color: #d70664;
+}
+.footer-chat-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(215, 6, 100, 0.25);
+}
+.footer-chat-button:active {
+  background-color: #b0054f;
+}
+.footer-chat-button:disabled {
+  background-color: #c0c0c0;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.footer-chat-button:disabled:hover {
+  background-color: #c0c0c0;
+  color: #6c757d;
+}
+.footer-chat-button:disabled:focus {
+  box-shadow: none;
 }

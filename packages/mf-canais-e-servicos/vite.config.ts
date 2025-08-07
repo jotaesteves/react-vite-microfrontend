@@ -11,6 +11,9 @@ export default defineConfig({
       exposes: {
         "./CanaisEServicos": "./src/CanaisEServicos.tsx",
       },
+      remotes: {
+        shared: "http://localhost:3008/assets/remoteEntry.js",
+      },
       shared: {
         react: {},
         "react-dom": {},

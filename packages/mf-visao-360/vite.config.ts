@@ -11,6 +11,9 @@ export default defineConfig({
       exposes: {
         "./Visao360": "./src/Visao360.tsx",
       },
+      remotes: {
+        shared: "http://localhost:3008/assets/remoteEntry.js",
+      },
       shared: {
         react: {},
         "react-dom": {},
