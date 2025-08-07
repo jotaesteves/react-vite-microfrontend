@@ -31,6 +31,27 @@
   color: #fff;
 }
 
+.footer-tag.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.footer-tag.history-tag {
+  background-color: #e3f2fd;
+  color: #1976d2;
+  border: 1px solid #bbdefb;
+}
+
+.footer-tag.history-tag:hover {
+  background-color: #1976d2;
+  color: white;
+}
+
+.footer-tag.history-tag.active {
+  background-color: #0d47a1;
+  color: white;
+}
+
 .footer-tag-close {
   margin-left: 8px;
   background: transparent;

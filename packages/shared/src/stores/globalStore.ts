@@ -32,6 +32,7 @@ export interface GlobalActions {
   setCurrentPage: (page: string) => void;
   navigateTo: (page: string) => void;
   goBack: () => void;
+  removeFromHistory: (page: string) => void;
 
   // User actions
   setUser: (user: Partial<GlobalState["user"]>) => void;
@@ -115,6 +116,22 @@ export const useGlobalStore = create<GlobalState & GlobalActions>()(
       }
     },
 
+    removeFromHistory: (page: string) => {
+      const { navigationHistory, currentPage } = get();
+      const updatedHistory = navigationHistory.filter((historyPage: string) => historyPage !== page);
+
+      // If the removed page was the current page, navigate to the last page in history or home
+      let newCurrentPage = currentPage;
+      if (currentPage === page) {
+        newCurrentPage = updatedHistory.length > 0 ? updatedHistory[updatedHistory.length - 1] : "home";
+      }
+
+      set({
+        currentPage: newCurrentPage,
+        navigationHistory: updatedHistory,
+      });
+    },
+
     // User actions
     setUser: (userData) => {
       set((state) => ({
@@ -196,6 +213,14 @@ export const useGlobalStore = create<GlobalState & GlobalActions>()(
 declare global {
   interface Window {
     globalMicroFrontendStore: typeof useGlobalStore;
+    microFrontendEventBus?: {
+      emit: (event: { type: string; payload: any }) => void;
+    };
+    microFrontendNavigation?: {
+      navigateTo: (path: string) => void;
+      getRouteFromTab?: (tab: string) => string;
+      getTabFromRoute?: (route: string) => string;
+    };
   }
 }
 

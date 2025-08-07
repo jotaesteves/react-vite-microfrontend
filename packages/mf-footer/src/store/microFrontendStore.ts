@@ -72,7 +72,27 @@ export const useMicroFrontendStore = () => {
 
   // Check if global store is available (running inside host)
   if (typeof window !== "undefined" && "globalMicroFrontendStore" in window) {
-    return (window as any).globalMicroFrontendStore();
+    // Access the shared global store directly
+    const globalStore = (window as any).globalMicroFrontendStore;
+    const state = globalStore.getState();
+
+    // Subscribe to global store changes
+    useEffect(() => {
+      return globalStore.subscribe(triggerUpdate);
+    }, [triggerUpdate]);
+
+    // Return global store state and actions
+    return {
+      ...state,
+      // Use global store's navigation methods
+      navigateTo: globalStore.getState().navigateTo,
+      setCurrentPage: globalStore.getState().setCurrentPage,
+      setUser: globalStore.getState().setUser,
+      setTheme: globalStore.getState().setTheme,
+      setSharedData: globalStore.getState().setSharedData,
+      getSharedData: globalStore.getState().getSharedData,
+      setLoading: globalStore.getState().setLoading,
+    };
   }
 
   // Use local store for standalone mode

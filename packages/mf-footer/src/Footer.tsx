@@ -1,74 +1,34 @@
 import React from "react";
 import "./Footer.css";
-import { useTheme, useNavigation } from "./store/microFrontendStore";
+import { useTheme } from "./store/microFrontendStore";
+import { FooterTags } from "./components";
+import { FooterTag } from "./types";
+import { useNavigationHistory } from "./hooks";
 
-const Footer: React.FC = () => {
+interface FooterProps {
+  customTags?: FooterTag[];
+  useHistory?: boolean; // Enable history-based tags (default: true)
+}
+
+/**
+ * Footer component that can display navigation tags based on:
+ * 1. Custom tags provided via props
+ * 2. Navigation history from the shared global store (default behavior)
+ * 3. Default tags if neither custom tags nor history is available
+ *
+ * When running in the host environment, it automatically uses the shared
+ * global store to track navigation history and display recently visited pages.
+ */
+const Footer: React.FC<FooterProps> = ({ customTags, useHistory = true }) => {
   const { theme } = useTheme();
-  const { currentPage, navigateTo } = useNavigation();
+  const historyTags = useNavigationHistory();
 
-  const handleFooterNavClick = (page: string, event: React.MouseEvent) => {
-    event.preventDefault();
-    navigateTo(page);
-  };
+  // Determine which tags to use
+  const tagsToUse = customTags || (useHistory ? historyTags : undefined);
 
   return (
     <footer className={`footer ${theme}`}>
-      <div className="footer-tags">
-        <span
-          className={`footer-tag ${currentPage === "home" ? "active" : ""}`}
-          onClick={(e) => handleFooterNavClick("home", e as React.MouseEvent)}
-          style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", marginRight: "8px" }}
-        >
-          Home
-          <button
-            className="footer-tag-close"
-            onClick={(e) => {
-              e.stopPropagation();
-              // Optionally handle tag close logic here
-            }}
-            aria-label="Close Home tag"
-            type="button"
-          >
-            ×
-          </button>
-        </span>
-        <span
-          className={`footer-tag ${currentPage === "about" ? "active" : ""}`}
-          onClick={(e) => handleFooterNavClick("about", e as React.MouseEvent)}
-          style={{ display: "inline-flex", alignItems: "center", cursor: "pointer", marginRight: "8px" }}
-        >
-          About
-          <button
-            className="footer-tag-close"
-            onClick={(e) => {
-              e.stopPropagation();
-              // Optionally handle tag close logic here
-            }}
-            aria-label="Close About tag"
-            type="button"
-          >
-            ×
-          </button>
-        </span>
-        <span
-          className={`footer-tag ${currentPage === "contact" ? "active" : ""}`}
-          onClick={(e) => handleFooterNavClick("contact", e as React.MouseEvent)}
-          style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
-        >
-          Contact
-          <button
-            className="footer-tag-close"
-            onClick={(e) => {
-              e.stopPropagation();
-              // Optionally handle tag close logic here
-            }}
-            aria-label="Close Contact tag"
-            type="button"
-          >
-            ×
-          </button>
-        </span>
-      </div>
+      <FooterTags tags={tagsToUse} />
       <div className="footer-chat">
         <button
           className="footer-chat-button"
